@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @version April 14, 2020, 1:48 pm UTC
  *
  * @property integer user_id
- * @property integer rrefeicao_id
+ * @property integer refeicao_id
  */
 class Auxilio extends Model
 {
@@ -26,7 +26,7 @@ class Auxilio extends Model
 
     public $fillable = [
         'user_id',
-        'rrefeicao_id'
+        'refeicao_id'
     ];
 
     /**
@@ -37,7 +37,7 @@ class Auxilio extends Model
     protected $casts = [
         'id' => 'integer',
         'user_id' => 'integer',
-        'rrefeicao_id' => 'integer'
+        'refeicao_id' => 'integer'
     ];
 
     /**
@@ -49,5 +49,25 @@ class Auxilio extends Model
         
     ];
 
+    /**
+     * The user associated with auxilio
+     */
+    public function user()
+    {
+        return $this->belongsTo('App\User', 'user_id');
+    }
+
+    /**
+     * The refeicao associated with auxilio
+     */
+    public function refeicao()
+    {
+        return $this->belongsTo('App\Models\Refeicao', 'refeicao_id');
+    }
+
+    public function getFormattedCreatedAtAttribute()
+    {
+        return $this->formatDate($this->created_at);
+    }
     
 }

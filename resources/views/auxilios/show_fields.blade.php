@@ -4,10 +4,10 @@
     <p>{{ $auxilio->user_id }}</p>
 </div>
 
-<!-- Rrefeicao Id Field -->
+<!-- Refeicao Id Field -->
 <div class="form-group">
-    {!! Form::label('rrefeicao_id', 'Rrefeicao Id:') !!}
-    <p>{{ $auxilio->rrefeicao_id }}</p>
+    {!! Form::label('refeicao_id', 'refeicao Id:') !!}
+    <p>{{ $auxilio->refeicao_id }}</p>
 </div>
 
 <!-- Created At Field -->

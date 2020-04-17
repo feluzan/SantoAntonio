@@ -18,7 +18,7 @@ class AuxilioRepository extends BaseRepository
      */
     protected $fieldSearchable = [
         'user_id',
-        'rrefeicao_id'
+        'refeicao_id'
     ];
 
     /**

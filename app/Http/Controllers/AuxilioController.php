@@ -11,6 +11,7 @@ use Flash;
 use Response;
 
 use App\User;
+use App\Models\Refeicao;
 
 class AuxilioController extends AppBaseController
 {
@@ -60,9 +61,9 @@ class AuxilioController extends AppBaseController
 
         $auxilio = $this->auxilioRepository->create($input);
 
-        Flash::success('Auxilio saved successfully.');
+        Flash::success('Auxilio salvo com sucesso.');
 
-        return redirect(route('auxilios.index'));
+        return redirect(route('auxilios.manage',[$input['user_id']]));
     }
 
     /**
@@ -142,6 +143,8 @@ class AuxilioController extends AppBaseController
     public function destroy($id)
     {
         $auxilio = $this->auxilioRepository->find($id);
+        $user_id = $auxilio->user_id;
+        // dd($user_id);
 
         if (empty($auxilio)) {
             Flash::error('Auxilio not found');
@@ -151,14 +154,17 @@ class AuxilioController extends AppBaseController
 
         $this->auxilioRepository->delete($id);
 
-        Flash::success('Auxilio deleted successfully.');
+        Flash::success('Auxilio deletado com sucesso.');
 
-        return redirect(route('auxilios.index'));
+        return redirect(route('auxilios.manage', [$user_id]));
     }
 
-    public function auxilioIndividual(User $user){
+    public function manage(User $user){
 
-        dd($user);
-        return view('auxilio.individual', compact('user'));
+        
+        $refeicoes = Refeicao::all();
+        // dd($user->auxilio);
+        // dd($user, $refeicoes);
+        return view('auxilios.individual', compact('user', 'refeicoes'));
     }
 }

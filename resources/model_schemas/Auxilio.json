@@ -24,7 +24,7 @@
         "inView": true
     },
     {
-        "name": "rrefeicao_id",
+        "name": "refeicao_id",
         "dbType": "integer:unsigned:foreign,refeicaos,id",
         "htmlType": "text",
         "validations": "",

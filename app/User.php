@@ -56,6 +56,13 @@ class User extends Authenticatable
         
     ];
 
+    /**
+     * Get the auxilio for the user.
+     */
+    public function auxilio()
+    {
+        return $this->hasMany('App\Models\Auxilio');
+    }
 
 
     public function getFormattedCreatedAtAttribute()

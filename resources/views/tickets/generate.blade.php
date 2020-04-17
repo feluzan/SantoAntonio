@@ -7,11 +7,29 @@
         </h1>
     </section>
     <div class="content">
+        @include('flash::message')
         @include('adminlte-templates::common.errors')
         <div class="box box-primary">
             <div class="box-body">
+                <div class="row" style="padding-left: 20px">
+                    <div class="form-group">
+                        {!! Form::label('refeicao_nome', 'Refeição:') !!}
+                        <p>{{ $refeicao->nome }}</p>
+                    </div>
+                    <div class="form-group">
+                        {!! Form::label('horario_inicio', 'Início:') !!}
+                        <p>{{ $refeicao->inicio }}</p>
+                    </div>
+                    <div class="form-group">
+                        {!! Form::label('horario_fim', 'Fim:') !!}
+                        <p>{{ $refeicao->fim }}</p>
+                    </div>
+                </div>
+
+
                 <div class="row">
                     <div class='col-xs-12'>
+                    
 
                     <?php 
                     if($refeicao->habilitada){

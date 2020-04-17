@@ -3,7 +3,7 @@
         <thead>
             <tr>
                 
-                <th >Ação</th>
+                <th >Ações</th>
                 <th >Nome</th>
                 <th> Usuário / Matrícula </th>
                 <th> Função </th>
@@ -16,7 +16,8 @@
                 
                 <td>
                     <div class='btn-group'>
-                        <a href="{{ route('user.edit', [$u->id]) }}" class='btn btn-default btn-xs'>Editar</a>
+                        <a href="{{ route('user.edit', [$u->id]) }}" class='btn btn-default btn-xs' title="Editar"><i class="glyphicon glyphicon-edit"></i></a>
+                        <a href="{{ route('auxilios.manage', [$u->id]) }}" class='btn btn-info btn-xs'>Gerenciar Auxílios </a>
                     </div>
                 </td>
                 <td> {{ $u->getName() }} </td>

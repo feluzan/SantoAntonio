@@ -15,6 +15,6 @@
 </div>
 
 <div class="form-group col-sm-12">
-    {!! Form::submit('Save', ['class' => 'btn btn-primary']) !!}
-    <a href="{{ route('tickets.index') }}" class="btn btn-default">Cancel</a>
+    {!! Form::submit('Avançar', ['class' => 'btn btn-primary']) !!}
+    <a href="{{ route('tickets.index') }}" class="btn btn-default">Voltar</a>
 </div>

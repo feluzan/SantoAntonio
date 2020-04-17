@@ -9,9 +9,11 @@ use App\Http\Controllers\AppBaseController;
 use Illuminate\Http\Request;
 use Flash;
 use Response;
+use Carbon\Carbon;
 
 use App\Models\Refeicao;
-use App\Models\UserRoles;
+use App\Models\Auxilio;
+use App\Models\Ticket;
 use App\User;
 
 class TicketController extends AppBaseController
@@ -59,21 +61,30 @@ class TicketController extends AppBaseController
     public function store(CreateTicketRequest $request)
     {
         $input = $request->all();
-        // dd('ola',$input);
-        $user = User::where('username',$input['username'])->first();
-        // dd($user);
-        $input['assistido_id']=$user->id;
-        // dd($input);
 
-        $ticket = $this->ticketRepository->create($input);
-
+        $assistido = User::where('username',$input['username'])->first();
         $refeicao = Refeicao::find($input['refeicao_id']);
+        
 
-        Flash::success('Ticket saved successfully.');
+        //verifica se o $assistido possui o auxilio para a $refeicao
+        $auxilio = Auxilio::where('user_id',$assistido->id)->where('refeicao_id',$refeicao->id)->first();
+        if($auxilio==null){
+            Flash::error('Ticket Virtual não gerado. ' . $assistido->name . ' não tem auxílio para essa refeição. ');
+            return redirect(route('ticket.generate',[$refeicao->id]));
+        }
+
+        //verifica se o $assistido já emitiu um ticket para a $refeicao na data de hoje
+        $todayTicket = Ticket::where('assistido_id',$assistido->id)->where('refeicao_id',$refeicao->id)->whereDate('created_at', Carbon::today())->first();
+        if($todayTicket!=null){
+            Flash::error('Ticket Virtual não gerado. ' . $assistido->name . ' já realizou essa refeição hoje. ');
+            return redirect(route('ticket.generate',[$refeicao->id]));
+        }
+
+        $input['assistido_id']=$assistido->id;
+        $ticket = $this->ticketRepository->create($input);
+        Flash::success('Ticket Virtual para  ' . $assistido->name . ' gerado com sucesso.');
 
         return redirect(route('ticket.generate',[$refeicao->id]));
-
-        // return redirect(route('tickets.index'));
     }
 
     /**

@@ -42,8 +42,8 @@ Route::group(['middleware' => 'auth'], function () {
     Route::resource('tickets', 'TicketController');
 
     Route::resource('auxilios', 'AuxilioController');
-    
-    Route::get('/auxilio/{user}', 'AuxilioController@auxilioIndividual')->name('auxilio.individual');
+    Route::get('/auxilio/{user}', 'AuxilioController@manage')->name('auxilios.manage');
+    // Route::get();
 });
 
 

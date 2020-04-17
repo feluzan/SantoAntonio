@@ -10,6 +10,8 @@ use Illuminate\Http\Request;
 use Flash;
 use Response;
 
+use App\Models\Auxilio;
+
 class RefeicaoController extends AppBaseController
 {
     /** @var  RefeicaoRepository */
@@ -104,7 +106,7 @@ class RefeicaoController extends AppBaseController
         $refeicao = $this->refeicaoRepository->find($id);
 
         if (empty($refeicao)) {
-            Flash::error('Refeicao not found');
+            Flash::error('Refeicão não encontrada');
 
             return redirect(route('refeicaos.index'));
         }
@@ -125,14 +127,19 @@ class RefeicaoController extends AppBaseController
         $refeicao = $this->refeicaoRepository->find($id);
 
         if (empty($refeicao)) {
-            Flash::error('Refeicao not found');
+            Flash::error('Refeição não encontrada.');
 
             return redirect(route('refeicaos.index'));
+        }
+        
+        if($request['habilitada']==0){
+            $count = Auxilio::where('refeicao_id',$id)->count();
+            Auxilio::where('refeicao_id',$id)->delete();
         }
 
         $refeicao = $this->refeicaoRepository->update($request->all(), $id);
 
-        Flash::success('Refeicao updated successfully.');
+        Flash::success('Refeição atualizada com sucesso.');
 
         return redirect(route('refeicaos.index'));
     }
@@ -162,4 +169,5 @@ class RefeicaoController extends AppBaseController
 
         return redirect(route('refeicaos.index'));
     }
+
 }

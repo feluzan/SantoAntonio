@@ -27,6 +27,8 @@
     <!-- Custom CSS Inludes -->
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.css">
 
+    <link rel="stylesheet" href="{{ asset('css/realtime-clock.css') }}">
+
     @yield('css')
 </head>
 
@@ -47,9 +49,11 @@
                 <a href="#" class="sidebar-toggle" data-toggle="push-menu" role="button">
                     <span class="sr-only">Toggle navigation</span>
                 </a>
+                <div id="showtime" class="realtime-clock"></div>
                 <!-- Navbar Right Menu -->
                 <div class="navbar-custom-menu">
                     <ul class="nav navbar-nav">
+                        
                         <!-- User Account Menu -->
                         <li class="dropdown user user-menu">
                             <!-- Menu Toggle Button -->
@@ -166,6 +170,24 @@
 
     <!-- Custom JS Includes -->
     <script src="//cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.js"></script>
+
+    <script type="text/javascript">
+        function showTime() {
+            var date = new Date(),
+                utc = new Date(Date.UTC(
+                date.getFullYear(),
+                date.getMonth(),
+                date.getDate(),
+                date.getHours(),
+                date.getMinutes(),
+                date.getSeconds()
+                ));
+
+            document.getElementById('showtime').innerHTML = utc.toLocaleTimeString();
+        }
+
+         setInterval(showTime, 1000);
+</script>
 
     @stack('scripts')
 </body>

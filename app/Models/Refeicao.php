@@ -33,7 +33,6 @@ class Refeicao extends Model
         'fim',
         'valor',
         'habilitada',
-        '_token',
     ];
 
     /**
@@ -55,6 +54,14 @@ class Refeicao extends Model
     public static $rules = [
         
     ];
+
+    /**
+     * Get the auxilio for the refeicao.
+     */
+    public function auxilio()
+    {
+        return $this->hasMany('App\Models\Auxilio');
+    }
 
     
 }

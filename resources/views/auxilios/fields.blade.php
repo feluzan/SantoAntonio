@@ -4,10 +4,10 @@
     {!! Form::text('user_id', null, ['class' => 'form-control']) !!}
 </div>
 
-<!-- Rrefeicao Id Field -->
+<!-- Refeicao Id Field -->
 <div class="form-group col-sm-6">
-    {!! Form::label('rrefeicao_id', 'Rrefeicao Id:') !!}
-    {!! Form::text('rrefeicao_id', null, ['class' => 'form-control']) !!}
+    {!! Form::label('refeicao_id', 'refeicao Id:') !!}
+    {!! Form::text('refeicao_id', null, ['class' => 'form-control']) !!}
 </div>
 
 <!-- Submit Field -->
