@@ -182,4 +182,28 @@ class TicketController extends AppBaseController
         // dd($refeicao);
         return view('tickets.generate',compact('refeicao'));
     }
+
+    public function ticketsToday(){
+        $tickets = Ticket::whereDate('created_at', Carbon::today())->get();
+        // dd($tickets);
+        return view('tickets.today',compact('tickets'));
+    }
+
+    public function ticketsPeriodo(Request $request){
+
+
+        if ($request->input('startDate')) {
+            $startDate = Carbon::create($request->input('startDate'));
+            $endDate = Carbon::create($request->input('endDate'));
+        }else{
+            $startDate = Carbon::today()->subDays(30);
+            $endDate = Carbon::today();
+        }
+        
+        // $refeicaos = Refeicao::all();
+
+        $tickets = Ticket::whereBetween('created_at', [$startDate, $endDate])->get();
+
+        return view('tickets.periodo',compact('startDate','endDate', 'tickets'));
+    }
 }

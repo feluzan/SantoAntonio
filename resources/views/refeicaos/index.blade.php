@@ -4,7 +4,8 @@
     <section class="content-header">
         <h1 class="pull-left">Refeições</h1>
         <h1 class="pull-right">
-           <a class="btn btn-primary pull-right" style="margin-top: -10px;margin-bottom: 5px" href="{{ route('refeicaos.create') }}">Adicionar Refeição</a>
+           <a class="btn btn-primary pull-right" style="margin-top: -10px;margin-bottom: 5px;margin-left:10px;" href="{{ route('refeicaos.create') }}">Adicionar Refeição</a>
+           <a class="btn bg-navy pull-right" style="margin-top: -10px;margin-bottom: 5px" href="{{ route('refeicaos.relatorio') }}">Gerar Relatório</a>
         </h1>
     </section>
     <div class="content">

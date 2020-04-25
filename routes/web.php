@@ -38,11 +38,15 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/ticket/{refeicao}/create', 'TicketController@generate')->name('ticket.generate');
 
     Route::resource('refeicaos', 'RefeicaoController');
+    Route::get('refeicaos/relatorio', 'RefeicaoController@relatorio')->name('refeicaos.relatorio');
 
     Route::resource('tickets', 'TicketController');
-
+    Route::get('/ticket/today', 'TicketController@ticketsToday')->name('tickets.today');
+    Route::get('/ticket/periodo', 'TicketController@ticketsPeriodo')->name('tickets.periodo');
+    
     Route::resource('auxilios', 'AuxilioController');
     Route::get('/auxilio/{user}', 'AuxilioController@manage')->name('auxilios.manage');
+    
     // Route::get();
 });
 

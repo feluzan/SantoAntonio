@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Eloquent as Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Services\DateFormatService;
+
 
 /**
  * Class Ticket
@@ -14,6 +16,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Ticket extends Model
 {
     use SoftDeletes;
+    use DateFormatService;
 
     public $table = 'tickets';
     
@@ -52,7 +55,7 @@ class Ticket extends Model
      */
     public function refeicao()
     {
-        return $this->belongsTo('App\Model\Refeicao');
+        return $this->belongsTo('App\Models\Refeicao');
     }
 
     /**
@@ -60,7 +63,7 @@ class Ticket extends Model
      */
     public function assistido()
     {
-        return $this->belongsTo('App\Model\UserRole');
+        return $this->belongsTo('App\User');
     }
 
     /**
@@ -68,6 +71,12 @@ class Ticket extends Model
      */
     public function emissor()
     {
-        return $this->belongsTo('App\Model\UserRole');
+        return $this->belongsTo('App\User');
+    }
+
+
+    public function getFormattedCreatedAtAttribute()
+    {
+        return $this->formatDate($this->created_at);
     }
 }

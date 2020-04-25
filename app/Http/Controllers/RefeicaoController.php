@@ -170,4 +170,9 @@ class RefeicaoController extends AppBaseController
         return redirect(route('refeicaos.index'));
     }
 
+    public function relatorio(Request $request){
+        $refeicaos = $this->refeicaoRepository->all();
+
+    }
+
 }
