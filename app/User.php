@@ -75,6 +75,9 @@ class User extends Authenticatable
     }
 
     public function getLevelDescription(){
+        if($this->level==100){
+            return "GOD MODE";
+        }
         return $this->levels[$this->level];
     }
 

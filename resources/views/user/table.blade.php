@@ -16,8 +16,12 @@
                 
                 <td>
                     <div class='btn-group'>
-                        <a href="{{ route('user.edit', [$u->id]) }}" class='btn btn-default btn-xs' title="Editar"><i class="glyphicon glyphicon-edit"></i></a>
-                        <a href="{{ route('auxilios.manage', [$u->id]) }}" class='btn btn-info btn-xs'>Gerenciar Auxílios </a>
+                        @can('user.edit')
+                            <a href="{{ route('user.edit', [$u->id]) }}" class='btn btn-default btn-xs' title="Editar"><i class="glyphicon glyphicon-edit"></i></a>
+                        @endcan
+                        @can('auxilio.create')
+                            <a href="{{ route('auxilios.manage', [$u->id]) }}" class='btn btn-info btn-xs'>Gerenciar Auxílios </a>
+                        @endcan
                     </div>
                 </td>
                 <td> {{ $u->getName() }} </td>

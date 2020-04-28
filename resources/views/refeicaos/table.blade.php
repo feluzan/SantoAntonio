@@ -26,15 +26,18 @@
                     @php
                         $now = Date('H:i:s');
                     @endphp
-                    @if($now<$refeicao->fim)
-                        @if($now>$refeicao->inicio)
-                            <a href="{{ route('ticket.generate', [$refeicao->id]) }}" class='btn btn-info btn-xs' title="Gerar Tickets"><i class="glyphicon glyphicon-credit-card"></i></a>
+
+                    @can('ticket.create')
+                        @if($now<$refeicao->fim)
+                            @if($now>$refeicao->inicio)
+                                <a href="{{ route('ticket.generate', [$refeicao->id]) }}" class='btn btn-info btn-xs' title="Gerar Tickets"><i class="glyphicon glyphicon-credit-card"></i></a>
+                            @else
+                            <a href="{{ route('ticket.generate', [$refeicao->id]) }}" class='btn btn-info disabled btn-xs' title="Gerar Tickets (refeição não iniciada)"><i class="glyphicon glyphicon-credit-card"></i></a>
+                            @endif
                         @else
-                        <a href="{{ route('ticket.generate', [$refeicao->id]) }}" class='btn btn-info disabled btn-xs' title="Gerar Tickets (refeição não iniciada)"><i class="glyphicon glyphicon-credit-card"></i></a>
+                        <a href="{{ route('ticket.generate', [$refeicao->id]) }}" class='btn btn-info disabled btn-xs' title="Gerar Tickets (refeição encerrada)"><i class="glyphicon glyphicon-credit-card"></i></a>
                         @endif
-                    @else
-                    <a href="{{ route('ticket.generate', [$refeicao->id]) }}" class='btn btn-info disabled btn-xs' title="Gerar Tickets (refeição encerrada)"><i class="glyphicon glyphicon-credit-card"></i></a>
-                    @endif
+                    @endcan
 
                         <a href="{{ route('refeicaos.edit', [$refeicao->id]) }}" class='btn btn-default btn-xs' title="Editar"><i class="glyphicon glyphicon-edit"></i></a>
                         {!! Form::hidden('nome', $refeicao->nome) !!}

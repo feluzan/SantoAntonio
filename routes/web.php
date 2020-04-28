@@ -33,19 +33,58 @@ Route::get('/home', 'HomeController@index')->middleware('verified');
 
 Route::group(['middleware' => 'auth'], function () {
 
-    Route::resource('user', 'UserController');
-  
-    Route::get('/ticket/{refeicao}/create', 'TicketController@generate')->name('ticket.generate');
+    // Listar usuarios
+    Route::group(['middleware' => 'can:user.index'], function () {
+        Route::get('/user', 'UserController@index')->name('user.index');
+    });
 
-    Route::resource('refeicaos', 'RefeicaoController');
+    //Editar usuario (alterar nivel de acesso)
+    Route::group(['middleware' => 'can:user.edit'], function () {
+        Route::get('/user/{user}/edit', 'UserController@edit')->name('user.edit');
+        Route::patch('/user/{user}', 'UserController@update')->name('user.update');
+    });
+
+
+    //Criar auxilio (conceder/suspender auxílio)
+    Route::group(['middleware' => 'can:auxilio.create'], function () {
+        Route::get('/auxilio/{user}', 'AuxilioController@manage')->name('auxilios.manage');
+        Route::delete('/auxilio/{auxilio}', 'AuxilioController@destroy')->name('auxilios.destroy');
+        Route::post('/auxilio','AuxilioController@store')->name('auxilios.store');
+    });
+    Route::get('/auxilio', 'AuxilioController@index')->name('auxilios.index')->middleware('can:auxilios.list');
+    // Route::resource('auxilios', 'AuxilioController');
+
+
+    //Gerenciar Refeicoes
+    Route::resource('refeicaos', 'RefeicaoController')->middleware('can:refeicao.manage');
+
+    //Criar tickets
+    Route::group(['middleware'=>'can:ticket.create'], function () {
+        Route::get('/ticket/{refeicao}/create', 'TicketController@generate')->name('ticket.generate');
+        Route::post('/tickets','TicketController@store')->name('tickets.store');
+        // Route::get('/ticket')
+        // GET           /users/create               create  users.create
+    });
+
+    // Route::resource('tickets', 'TicketController');
+
+    //Listar tickets
+    Route::group(['middleware'=>'can:ticket.list'], function () {
+        Route::get('/ticket/today', 'TicketController@ticketsToday')->name('tickets.today');
+        Route::get('/ticket/periodo', 'TicketController@ticketsPeriodo')->name('tickets.periodo');
+    });
+
     Route::get('refeicaos/relatorio', 'RefeicaoController@relatorio')->name('refeicaos.relatorio');
 
-    Route::resource('tickets', 'TicketController');
-    Route::get('/ticket/today', 'TicketController@ticketsToday')->name('tickets.today');
-    Route::get('/ticket/periodo', 'TicketController@ticketsPeriodo')->name('tickets.periodo');
+
     
-    Route::resource('auxilios', 'AuxilioController');
-    Route::get('/auxilio/{user}', 'AuxilioController@manage')->name('auxilios.manage');
+
+    
+    
+    
+    
+    
+    // Route::get('/auxilio/{user}', 'AuxilioController@manage')->name('auxilios.manage');
     
     // Route::get();
 });
