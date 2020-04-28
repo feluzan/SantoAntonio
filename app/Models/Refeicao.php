@@ -63,5 +63,4 @@ class Refeicao extends Model
         return $this->hasMany('App\Models\Auxilio');
     }
 
-    
 }

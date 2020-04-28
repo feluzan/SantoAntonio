@@ -62,6 +62,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::group(['middleware'=>'can:ticket.create'], function () {
         Route::get('/ticket/{refeicao}/create', 'TicketController@generate')->name('ticket.generate');
         Route::post('/tickets','TicketController@store')->name('tickets.store');
+        Route::get('/tickets', 'TicketController@index')->name('tickets.index');
         // Route::get('/ticket')
         // GET           /users/create               create  users.create
     });
@@ -76,6 +77,8 @@ Route::group(['middleware' => 'auth'], function () {
 
     Route::get('refeicaos/relatorio', 'RefeicaoController@relatorio')->name('refeicaos.relatorio');
 
+
+    Route::post('/ticket/periodo','TicketController@reportBuild')->name('tickets.reportBuild');
 
     
 

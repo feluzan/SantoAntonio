@@ -179,6 +179,8 @@ return [
         Adldap\Laravel\AdldapServiceProvider::class,
         Adldap\Laravel\AdldapAuthServiceProvider::class,
 
+        Barryvdh\DomPDF\ServiceProvider::class,
+
     ],
 
     /*
@@ -234,6 +236,7 @@ return [
         'Html'         => Collective\Html\HtmlFacade::class,
         'Flash'        => Laracasts\Flash\Flash::class,
         'Adldap' => Adldap\Laravel\Facades\Adldap::class,
+        'PDF' => Barryvdh\DomPDF\Facade::class,
     ],
 
 ];

@@ -24,4 +24,9 @@ trait DateFormatService
             return null;
         }
     }
+
+
+    public function formatCurrencyValue($string){
+        return "R$ " . str_replace('.',',',$string);
+    }
 }

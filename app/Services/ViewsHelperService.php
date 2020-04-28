@@ -26,6 +26,7 @@ class ViewsHelperService
         }
 
         $result = $entity;
+        // dd($entity);
         foreach ($paths as $path) {
             $result = $result->{$path};
             if (!$result) {
@@ -81,4 +82,5 @@ class ViewsHelperService
 
         return $string;
     }
+
 }

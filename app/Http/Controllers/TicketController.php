@@ -16,6 +16,8 @@ use App\Models\Auxilio;
 use App\Models\Ticket;
 use App\User;
 
+use PDF;
+
 class TicketController extends AppBaseController
 {
     /** @var  TicketRepository */
@@ -192,18 +194,49 @@ class TicketController extends AppBaseController
     public function ticketsPeriodo(Request $request){
 
 
-        if ($request->input('startDate')) {
-            $startDate = Carbon::create($request->input('startDate'));
-            $endDate = Carbon::create($request->input('endDate'));
+        $startDate = $request->input('startDate') ? Carbon::create($request->input('startDate')) : Carbon::today()->subDays(30);
+        $endDate = $request->input('endDate') ? Carbon::create($request->input('endDate')) : Carbon::today();
+        $refeicaoID = $request->input('refeicaoID') ? $request->input('refeicaoID') : 0;
+        
+        $refeicaoOptions = \App\Models\Refeicao::pluck('nome','id')->toArray();
+        array_unshift($refeicaoOptions, 'Todas');
+        // dd($refeicaoOptions);
+        // dd($refeicaoSelectOptions);
+
+        if($refeicaoID>0){
+            $tickets = Ticket::whereBetween('created_at', [$startDate, $endDate])->where('refeicao_id',$refeicaoID)->get();
         }else{
-            $startDate = Carbon::today()->subDays(30);
-            $endDate = Carbon::today();
+            $tickets = Ticket::whereBetween('created_at', [$startDate, $endDate])->get();
         }
         
-        // $refeicaos = Refeicao::all();
 
-        $tickets = Ticket::whereBetween('created_at', [$startDate, $endDate])->get();
-
-        return view('tickets.periodo',compact('startDate','endDate', 'tickets'));
+        return view('tickets.periodo',compact('startDate','endDate', 'tickets','refeicaoOptions','refeicaoID'));
     }
+
+
+
+    public function reportBuild(Request $request){
+        
+        $startDate = Carbon::create($request->input('startDate'));
+        $endDate = Carbon::create($request->input('endDate'));
+        $items = Ticket::whereBetween('created_at', [$startDate, $endDate])->get();
+
+        $fields = [
+            'refeicao.nome' => 'Refeição',
+            'assistido.name' => 'Assistido',
+            'emissor.name' => 'Emissor',
+            'formatted_value' => 'Valor',
+            'formatted_created_at' => 'Usado em'
+        
+        ];
+
+        $metaData = [
+            'title' => 'Relatório de Tickets Virtuais emitodos entre ' . date('d/m/Y', strtotime($startDate))  . ' e ' . date('d/m/Y', strtotime($endDate)),
+        ];
+        // return view('layouts.reportPDF',compact('items','fields'));
+        $pdf = PDF::loadView('layouts.reportPDF',compact('items','fields','metaData'))->setPaper('a4', 'landscape');
+        return $pdf->download('[SA]Relatório.pdf');
+
+    }
+
 }

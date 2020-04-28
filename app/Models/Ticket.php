@@ -79,4 +79,8 @@ class Ticket extends Model
     {
         return $this->formatDate($this->created_at);
     }
+
+    public function getFormattedValueAttribute(){
+        return $this->formatCurrencyValue($this->valor);
+    }
 }

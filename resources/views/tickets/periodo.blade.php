@@ -14,19 +14,23 @@
         <div class="clearfix"></div>
         <div class="box box-primary">
             <div class="box-body">
-            <h4 class="pull-left">Período da Consulta</h4>
+            <h4 class="pull-left">Filtros da Consulta</h4>
                 <div class="row">
                     <div class="col-xs-12">
-                        {!! Form::open(['route' => 'tickets.periodo','id' =>'periodoForm']) !!}
+                        {!! Form::open(['route' => 'tickets.reportBuild','id' =>'periodoForm']) !!}
                             {!! Form::label('start', 'Data Início:') !!}
-                            {{ Form::date('startDate', $startDate,['id'=>'startDateInput', 'onchange' => 'onChangeDates()']  ) }}
+                            {{ Form::date('startDate', $startDate,['id'=>'startDateInput', 'onchange' => 'onChangeFilters()']  ) }}
                             {!! Form::label('end', 'Data Fim:') !!}
-                            {{ Form::date('endDate', $endDate, ['id'=>'endDateInput', 'onchange' => 'onChangeDates()'] ) }}
-                            <br>
+                            {{ Form::date('endDate', $endDate, ['id'=>'endDateInput', 'onchange' => 'onChangeFilters()'] ) }}
+                            {!! Form::label('refeicaoLabel', 'Especificar Refeição:') !!}
+                            {{ Form::select('refeicao',$refeicaoOptions, $refeicaoID , ['id'=>'selectRefeicaoInput', 'onchange' => 'onChangeFilters()']) }}
+                            <!-- <br> -->
                             
-                            <div class='btn-group'>
-                                <a href="" class="btn btn-primary" id="periodoLink">Atualizar Peíodo</a>
+                            <div class='btn-group pull-right'>
+                                <a href="" class="btn btn-primary " id="periodoLink">Visualizar na tela</a>
+                                {!! Form::button('Exportar PDF', ['type' => 'submit', 'class' => 'btn btn-default',  'title' => 'Emitir PDF']) !!}
                             </div>
+                            
                         {!! Form::close() !!}
 
                         

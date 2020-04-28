@@ -20,11 +20,16 @@
 //     e.preventDefault();
 // });
 
-function onChangeDates(){
+function onChangeFilters(){
     // alert('opa');
     var startDate = document.getElementById('startDateInput').value;
     var endDate = document.getElementById('endDateInput').value;
-    // console.log(startDate);
-    document.getElementById("periodoLink").href="/ticket/periodo?startDate=" + startDate + "&endDate=" + endDate; 
+    var selectRefeicao = document.getElementById('selectRefeicaoInput');
 
+    var refeicao = selectRefeicao.options[selectRefeicao.selectedIndex].value;
+
+    console.log(startDate, endDate,refeicao);
+    document.getElementById("periodoLink").href="/ticket/periodo?startDate=" + startDate + "&endDate=" + endDate + "&refeicaoID=" + refeicao;
+    // console.log(startDate);
+    
 };
