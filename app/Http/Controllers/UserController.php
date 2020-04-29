@@ -10,6 +10,8 @@ use Illuminate\Http\Request;
 use Flash;
 use Response;
 
+use App\User;
+
 class UserController extends AppBaseController
 {
     /** @var  UserRepository */
@@ -29,7 +31,17 @@ class UserController extends AppBaseController
      */
     public function index(Request $request)
     {
-        $user = $this->userRepository->all();
+        $input = $request->all();
+        if(isset($input['search'])){
+            $searchTerm = $input['search'];
+            $user = User::query()
+                        ->where('name', 'LIKE', "%{$searchTerm}%") 
+                        ->orWhere('username', 'LIKE', "%{$searchTerm}%") 
+                        ->get();
+
+        }else{
+            $user = $this->userRepository->all();
+        }
 
         return view('user.index')
             ->with('user', $user);

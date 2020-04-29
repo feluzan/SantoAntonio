@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Eloquent as Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Services\DateFormatService;
 
 /**
  * Class Refeicao
@@ -19,6 +20,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Refeicao extends Model
 {
     use SoftDeletes;
+    use DateFormatService;
 
     public $table = 'refeicaos';
     
@@ -61,6 +63,14 @@ class Refeicao extends Model
     public function auxilio()
     {
         return $this->hasMany('App\Models\Auxilio');
+    }
+
+    public function getFormattedValueAttribute(){
+        return $this->formatCurrencyValue($this->valor);
+    }
+
+    public function getFormattedHabilitadaAttribute(){
+        return $this->habilitada ? "Habilitada" : "Desabilitada";
     }
 
 }

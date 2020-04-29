@@ -9,8 +9,10 @@ use App\Http\Controllers\AppBaseController;
 use Illuminate\Http\Request;
 use Flash;
 use Response;
+use PDF;
 
 use App\Models\Auxilio;
+use App\Models\Refeicao;
 
 class RefeicaoController extends AppBaseController
 {
@@ -170,8 +172,26 @@ class RefeicaoController extends AppBaseController
         return redirect(route('refeicaos.index'));
     }
 
-    public function relatorio(Request $request){
-        $refeicaos = $this->refeicaoRepository->all();
+    public function reportBuild(Request $request){
+        
+        $items = Refeicao::all();
+        
+        $fields = [
+            'nome' => 'Refeição',
+            'inicio' => 'Início',
+            'fim' => 'Fim',
+            'formatted_value' => 'Valor',
+            'formatted_habilitada' => 'Status'
+        
+        ];
+
+        $metaData = [
+            'title' => 'Relatório de Refeições',
+            'filter' => '',
+        ];
+        // return view('layouts.reportPDF',compact('items','fields'));
+        $pdf = PDF::loadView('layouts.tableLandscapePDF',compact('items','fields','metaData'))->setPaper('a4', 'landscape');
+        return $pdf->download('[SA]Relatório de Refeições.pdf');
 
     }
 

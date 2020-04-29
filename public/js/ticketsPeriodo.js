@@ -27,9 +27,39 @@ function onChangeFilters(){
     var selectRefeicao = document.getElementById('selectRefeicaoInput');
 
     var refeicao = selectRefeicao.options[selectRefeicao.selectedIndex].value;
-
-    console.log(startDate, endDate,refeicao);
     document.getElementById("periodoLink").href="/ticket/periodo?startDate=" + startDate + "&endDate=" + endDate + "&refeicaoID=" + refeicao;
-    // console.log(startDate);
     
 };
+
+function getStringDate(d){
+    if(d.getMonth()<9){
+        var date = d.getFullYear()+'-0'+(d.getMonth()+1)+'-'+d.getDate();
+    }else{
+        var date = d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate();
+    }
+    return date;
+}
+
+function fastFilterToday(){
+    var today = new Date();
+    document.getElementById('startDateInput').value = getStringDate(today);
+    document.getElementById('endDateInput').value = getStringDate(today);
+    onChangeFilters();
+}
+
+function fastFilterYesterday(){
+    var yesterday = new Date();
+    yesterday.setDate(yesterday.getDate() - 1);
+    document.getElementById('startDateInput').value = getStringDate(yesterday);
+    document.getElementById('endDateInput').value = getStringDate(yesterday);
+    onChangeFilters();
+}
+
+function fastFilterDaysBack(d){
+    var today = new Date();
+    var someDayBack = new Date();
+    someDayBack.setDate(someDayBack.getDate() - d);
+    document.getElementById('startDateInput').value = getStringDate(someDayBack);
+    document.getElementById('endDateInput').value = getStringDate(today);
+    onChangeFilters();
+}

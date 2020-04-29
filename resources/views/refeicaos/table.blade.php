@@ -1,3 +1,5 @@
+@inject('helper', 'App\Services\ViewsHelperService')
+
 <div class="table-responsive">
     <table class="table" id="refeicaos-table">
         <thead>
@@ -16,7 +18,7 @@
                 <td>{{ $refeicao->nome }}</td>
             <td>{{ $refeicao->inicio }}</td>
             <td>{{ $refeicao->fim }}</td>
-            <td>{{ $refeicao->valor }}</td>
+            <td>{{ $refeicao->getFormattedValueAttribute() }}</td>
             <td>
                 <?php echo ($refeicao->habilitada ? "Habilitada" : "Desabilitada"); ?>
             </td>

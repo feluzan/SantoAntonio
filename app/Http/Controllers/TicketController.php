@@ -17,6 +17,7 @@ use App\Models\Ticket;
 use App\User;
 
 use PDF;
+use DB;
 
 class TicketController extends AppBaseController
 {
@@ -185,12 +186,6 @@ class TicketController extends AppBaseController
         return view('tickets.generate',compact('refeicao'));
     }
 
-    public function ticketsToday(){
-        $tickets = Ticket::whereDate('created_at', Carbon::today())->get();
-        // dd($tickets);
-        return view('tickets.today',compact('tickets'));
-    }
-
     public function ticketsPeriodo(Request $request){
 
 
@@ -202,11 +197,11 @@ class TicketController extends AppBaseController
         array_unshift($refeicaoOptions, 'Todas');
         // dd($refeicaoOptions);
         // dd($refeicaoSelectOptions);
-
+        
         if($refeicaoID>0){
-            $tickets = Ticket::whereBetween('created_at', [$startDate, $endDate])->where('refeicao_id',$refeicaoID)->get();
+            $tickets = Ticket::whereBetween(DB::raw('date(created_at)'), [$startDate, $endDate])->where('refeicao_id',$refeicaoID)->get();
         }else{
-            $tickets = Ticket::whereBetween('created_at', [$startDate, $endDate])->get();
+            $tickets = Ticket::whereBetween(DB::raw('date(created_at)'), [$startDate, $endDate])->get();
         }
         
 
@@ -219,23 +214,35 @@ class TicketController extends AppBaseController
         
         $startDate = Carbon::create($request->input('startDate'));
         $endDate = Carbon::create($request->input('endDate'));
-        $items = Ticket::whereBetween('created_at', [$startDate, $endDate])->get();
+        $refeicaoID = $request->input('refeicaoID') ? $request->input('refeicaoID') : 0;
+
+        if($refeicaoID>0){
+            $items = Ticket::whereBetween(DB::raw('date(created_at)'), [$startDate, $endDate])->where('refeicao_id',$refeicaoID)->get();
+            $refeicaoNome = Refeicao::find($refeicaoID)->nome;
+        }else{
+            $items = Ticket::whereBetween(DB::raw('date(created_at)'), [$startDate, $endDate])->get();
+            $refeicaoNome = 'Todas';
+        }
+
+        
+
 
         $fields = [
             'refeicao.nome' => 'Refeição',
             'assistido.name' => 'Assistido',
             'emissor.name' => 'Emissor',
             'formatted_value' => 'Valor',
-            'formatted_created_at' => 'Usado em'
+            'formatted_created_at' => 'Emissão'
         
         ];
 
         $metaData = [
-            'title' => 'Relatório de Tickets Virtuais emitodos entre ' . date('d/m/Y', strtotime($startDate))  . ' e ' . date('d/m/Y', strtotime($endDate)),
+            'title' => 'Relatório de Tickets Virtuais',
+            'filter' => 'Data Início: ' . date('d/m/Y', strtotime($startDate)) . ' || ' . 'Data Fim: ' . date('d/m/Y', strtotime($endDate)) . ' || Refeição: ' . $refeicaoNome,
         ];
         // return view('layouts.reportPDF',compact('items','fields'));
-        $pdf = PDF::loadView('layouts.reportPDF',compact('items','fields','metaData'))->setPaper('a4', 'landscape');
-        return $pdf->download('[SA]Relatório.pdf');
+        $pdf = PDF::loadView('layouts.tableLandscapePDF',compact('items','fields','metaData'))->setPaper('a4', 'landscape');
+        return $pdf->download('[SA]Relatório de Tickets.pdf');
 
     }
 

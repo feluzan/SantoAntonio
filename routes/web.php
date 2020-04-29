@@ -57,6 +57,7 @@ Route::group(['middleware' => 'auth'], function () {
 
     //Gerenciar Refeicoes
     Route::resource('refeicaos', 'RefeicaoController')->middleware('can:refeicao.manage');
+    Route::get('/refeicaos/relatorio', 'RefeicaoController@reportBuild')->name('refeicaos.reportBuild');
 
     //Criar tickets
     Route::group(['middleware'=>'can:ticket.create'], function () {
@@ -71,11 +72,10 @@ Route::group(['middleware' => 'auth'], function () {
 
     //Listar tickets
     Route::group(['middleware'=>'can:ticket.list'], function () {
-        Route::get('/ticket/today', 'TicketController@ticketsToday')->name('tickets.today');
         Route::get('/ticket/periodo', 'TicketController@ticketsPeriodo')->name('tickets.periodo');
     });
 
-    Route::get('refeicaos/relatorio', 'RefeicaoController@relatorio')->name('refeicaos.relatorio');
+    
 
 
     Route::post('/ticket/periodo','TicketController@reportBuild')->name('tickets.reportBuild');

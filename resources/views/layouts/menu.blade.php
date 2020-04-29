@@ -24,9 +24,6 @@
 <hr>
 
 @can('ticket.list')
-    <li class="{{ Route::is('tickets.today') ? 'active' : '' }}">
-        <a href="{{ route('tickets.today') }}"><i class="fa fa-edit"></i><span>Tickets de Hoje</span></a>
-    </li>
     <li class="{{ Route::is('tickets.periodo') ? 'active' : '' }}">
         <a href="{{ route('tickets.periodo') }}"><i class="fa fa-edit"></i><span>Tickets por Período</span></a>
     </li>
