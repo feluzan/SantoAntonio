@@ -7,6 +7,7 @@ use App\Http\Requests\UpdateRefeicaoRequest;
 use App\Repositories\RefeicaoRepository;
 use App\Http\Controllers\AppBaseController;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Flash;
 use Response;
 use PDF;
@@ -50,7 +51,6 @@ class RefeicaoController extends AppBaseController
         return view('refeicaos.create');
     }
 
-    
     /**
      * Store a newly created Refeicao in storage.
      *
@@ -146,32 +146,6 @@ class RefeicaoController extends AppBaseController
         return redirect(route('refeicaos.index'));
     }
 
-    /**
-     * Remove the specified Refeicao from storage.
-     *
-     * @param int $id
-     *
-     * @throws \Exception
-     *
-     * @return Response
-     */
-    public function destroy($id)
-    {
-        $refeicao = $this->refeicaoRepository->find($id);
-
-        if (empty($refeicao)) {
-            Flash::error('Refeicao not found');
-
-            return redirect(route('refeicaos.index'));
-        }
-
-        $this->refeicaoRepository->delete($id);
-
-        Flash::success('Refeicao deleted successfully.');
-
-        return redirect(route('refeicaos.index'));
-    }
-
     public function reportBuild(Request $request){
         
         $items = Refeicao::all();
@@ -186,12 +160,12 @@ class RefeicaoController extends AppBaseController
         ];
 
         $metaData = [
-            'title' => 'Relatório de Refeições',
+            'title' => 'Relatório de Refeições - Emitido por ' . Auth::user()->name . ' em ' . date('d/m/Y H:i:s'),
             'filter' => '',
         ];
         // return view('layouts.reportPDF',compact('items','fields'));
         $pdf = PDF::loadView('layouts.tableLandscapePDF',compact('items','fields','metaData'))->setPaper('a4', 'landscape');
-        return $pdf->download('[SA]Relatório de Refeições.pdf');
+        return $pdf->download('[SA]Relatório de Refeições ' . date('dmyHis') . '.pdf');
 
     }
 

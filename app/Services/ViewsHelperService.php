@@ -82,5 +82,10 @@ class ViewsHelperService
 
         return $string;
     }
+    
+
+    public function formatPorcentagem($value){
+        return number_format ( $value*100 , 2 , ',' , '.' ) . '%';
+    }
 
 }

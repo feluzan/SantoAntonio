@@ -26,7 +26,7 @@ trait DateFormatService
     }
 
 
-    public function formatCurrencyValue($string){
-        return "R$ " . str_replace('.',',',$string);
+    public function formatCurrencyValue($value){
+        return "R$ " . number_format ( $value , 2 , ',' , '.' );
     }
 }

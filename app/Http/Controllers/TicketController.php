@@ -7,6 +7,7 @@ use App\Http\Requests\UpdateTicketRequest;
 use App\Repositories\TicketRepository;
 use App\Http\Controllers\AppBaseController;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Flash;
 use Response;
 use Carbon\Carbon;
@@ -27,21 +28,6 @@ class TicketController extends AppBaseController
     public function __construct(TicketRepository $ticketRepo)
     {
         $this->ticketRepository = $ticketRepo;
-    }
-
-    /**
-     * Display a listing of the Ticket.
-     *
-     * @param Request $request
-     *
-     * @return Response
-     */
-    public function index(Request $request)
-    {
-        $tickets = $this->ticketRepository->all();
-
-        return view('tickets.index')
-            ->with('tickets', $tickets);
     }
 
     /**
@@ -110,83 +96,12 @@ class TicketController extends AppBaseController
         return view('tickets.show')->with('ticket', $ticket);
     }
 
-    /**
-     * Show the form for editing the specified Ticket.
-     *
-     * @param int $id
-     *
-     * @return Response
-     */
-    public function edit($id)
-    {
-        $ticket = $this->ticketRepository->find($id);
-
-        if (empty($ticket)) {
-            Flash::error('Ticket not found');
-
-            return redirect(route('tickets.index'));
-        }
-
-        return view('tickets.edit')->with('ticket', $ticket);
-    }
-
-    /**
-     * Update the specified Ticket in storage.
-     *
-     * @param int $id
-     * @param UpdateTicketRequest $request
-     *
-     * @return Response
-     */
-    public function update($id, UpdateTicketRequest $request)
-    {
-        $ticket = $this->ticketRepository->find($id);
-
-        if (empty($ticket)) {
-            Flash::error('Ticket not found');
-
-            return redirect(route('tickets.index'));
-        }
-
-        $ticket = $this->ticketRepository->update($request->all(), $id);
-
-        Flash::success('Ticket updated successfully.');
-
-        return redirect(route('tickets.index'));
-    }
-
-    /**
-     * Remove the specified Ticket from storage.
-     *
-     * @param int $id
-     *
-     * @throws \Exception
-     *
-     * @return Response
-     */
-    public function destroy($id)
-    {
-        $ticket = $this->ticketRepository->find($id);
-
-        if (empty($ticket)) {
-            Flash::error('Ticket not found');
-
-            return redirect(route('tickets.index'));
-        }
-
-        $this->ticketRepository->delete($id);
-
-        Flash::success('Ticket deleted successfully.');
-
-        return redirect(route('tickets.index'));
-    }
-
     public function generate(Refeicao $refeicao){
         // dd($refeicao);
         return view('tickets.generate',compact('refeicao'));
     }
 
-    public function ticketsPeriodo(Request $request){
+    public function reportIndex(Request $request){
 
 
         $startDate = $request->input('startDate') ? Carbon::create($request->input('startDate')) : Carbon::today()->subDays(30);
@@ -205,10 +120,8 @@ class TicketController extends AppBaseController
         }
         
 
-        return view('tickets.periodo',compact('startDate','endDate', 'tickets','refeicaoOptions','refeicaoID'));
+        return view('tickets.reportIndex',compact('startDate','endDate', 'tickets','refeicaoOptions','refeicaoID'));
     }
-
-
 
     public function reportBuild(Request $request){
         
@@ -224,25 +137,21 @@ class TicketController extends AppBaseController
             $refeicaoNome = 'Todas';
         }
 
-        
-
-
         $fields = [
             'refeicao.nome' => 'Refeição',
             'assistido.name' => 'Assistido',
             'emissor.name' => 'Emissor',
             'formatted_value' => 'Valor',
             'formatted_created_at' => 'Emissão'
-        
         ];
 
         $metaData = [
-            'title' => 'Relatório de Tickets Virtuais',
+            'title' => 'Relatório de Tickets Virtuais - Emitido por ' . Auth::user()->name . ' em ' . date('d/m/Y H:i:s'),
             'filter' => 'Data Início: ' . date('d/m/Y', strtotime($startDate)) . ' || ' . 'Data Fim: ' . date('d/m/Y', strtotime($endDate)) . ' || Refeição: ' . $refeicaoNome,
         ];
         // return view('layouts.reportPDF',compact('items','fields'));
         $pdf = PDF::loadView('layouts.tableLandscapePDF',compact('items','fields','metaData'))->setPaper('a4', 'landscape');
-        return $pdf->download('[SA]Relatório de Tickets.pdf');
+        return $pdf->download('[SA]Relatório de Tickets ' . date('dmyHis') . '.pdf');
 
     }
 

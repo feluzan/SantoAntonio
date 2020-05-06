@@ -36,52 +36,94 @@ class AuthServiceProvider extends ServiceProvider
         // 4 => 'Consultas de Relatórios',
 
 
+        // ---------------------- USER -------------------------------------
         //Usuarios que podem listar usuarios: Administrador e Gestor do Auxílio
-        Gate::define('user.index', function () {
+        Gate::define('users.index', function () {
             $user = Auth::user();
-            if($user->level==100 || $user->level==1 || $user->level==2) return Response::allow();
+            if(in_array($user->level,array(100,1,2))) return Response::allow();
             return Response::deny('Você precisa ser um Administrador ou um Gestor de Auxílio para acessar essa função.');
         });
 
         //Usuarios que podem editar usuarios: Administrador
         Gate::define('user.edit', function () {
             $user = Auth::user();
-            if($user->level==100 || $user->level===1) return Response::allow();
+            if(in_array($user->level,array(100,1))) return Response::allow();
             return Response::deny('Você precisa ser um Administrador para acessar essa função.');
+        });
+
+
+        // ---------------------- REFEICAO -------------------------------------
+        //Usuarios que podem listar refeições: Todos
+        Gate::define('refeicaos.list', function () {
+            return Response::allow();
+        });
+
+        //Usuarios que podem criar e editar refeicoes: Administrador
+        Gate::define('refeicaos.create', function () {
+            $user = Auth::user();
+            if(in_array($user->level,array(100,1))) return Response::allow();
+            return Response::deny('Você precisa ser um Administrador para acessar essa função.');
+        });
+
+        //Usuarios que podem gerar relatórios de refeicoes: Todos
+        Gate::define('refeicaos.report', function () {
+            return Response::allow();
+        });
+
+
+        // ---------------------- auxilio -------------------------------------
+        //Usuarios que podem listar auxilios: Administrador, Gerenciador de Auxílio
+        Gate::define('auxilios.list', function () {
+            $user = Auth::user();
+            if(in_array($user->level,array(100,1,2))) return Response::allow();
+            return Response::deny('Você precisa ser um Administrador ou um Gerenciador de Auxílio para acessar essa função.');
         });
 
         //Usuarios que podem conceder (criar) auxilio: Gerenciador de Auxilios
         Gate::define('auxilio.create', function () {
             $user = Auth::user();
-            if($user->level==100 || $user->level===2) return Response::allow();
+            if(in_array($user->level,array(100,2))) return Response::allow();
             return Response::deny('Você precisa ser um Gerenciador de Auxilio para acessar essa função.');
         });
-        //Usuarios que podem listar auxilios: Administrador, Gerenciador de Auxílio
-        Gate::define('auxilios.list', function () {
+
+        //Usuarios que podem gerar relatórios de auxilios: Administrador, Gestor
+        Gate::define('auxilios.report', function () {
             $user = Auth::user();
-            if($user->level==100 || $user->level===1 || $user->level===2) return Response::allow();
-            return Response::deny('Você precisa ser um Administrador ou um Gerenciador de Auxílio para acessar essa função.');
+            if(in_array($user->level,array(100,1,2))) return Response::allow();
+            return Response::deny('Você precisa ser um Gerenciador de Auxilio para acessar essa função.');
         });
 
-        //Usuarios que podem gerenciar refeições: Administrador
-        Gate::define('refeicao.manage', function () {
-            $user = Auth::user();
-            if($user->level==100 || $user->level===1) return Response::allow();
-            return Response::deny('Você precisa ser um Administrador para acessar essa função.');
-        });
 
-        //Listar tickets:
-        Gate::define('ticket.list', function () {
-            $user = Auth::user();
-            if(in_array($user->level,array(100,1,2,3))) return Response::allow();
-            return Response::deny('Você precisa ser um Administrador para acessar essa função.');
-        });
-
+        // ---------------------- ticket -------------------------------------
+        //Gerar tickets
         Gate::define('ticket.create', function () {
             $user = Auth::user();
             if(in_array($user->level,array(100,3))) return Response::allow();
             return Response::deny('Você precisa ser um Restaurante para acessar essa função.');
         });
+
+        //Listar tickets:
+        Gate::define('tickets.report', function () {
+            $user = Auth::user();
+            if(in_array($user->level,array(100,1,2,3))) return Response::allow();
+            return Response::deny('Você precisa ser um Administrador para acessar essa função.');
+        });
+
+        
+
+
+
+        // ---------------------- dashboard -------------------------------------
+        //Usuarios que visualizam a tabela de resumo de uso diário
+        Gate::define('dashboard.table', function () {
+            $user = Auth::user();
+            if(in_array($user->level,array(100,1,2))) return Response::allow();
+            return Response::deny('Você precisa ser um Gerenciador de Auxilio para acessar essa função.');
+        });
+
+        
+
+        
 
         
     }

@@ -16,5 +16,5 @@
 
 
     {!! Form::submit('Save', ['class' => 'btn btn-primary']) !!}
-    <a href="{{ route('user.index') }}" class="btn btn-default">Cancel</a>
+    <a href="{{ route('users.index') }}" class="btn btn-default">Cancel</a>
 </div>

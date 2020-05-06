@@ -41,6 +41,7 @@
                         @endif
                     @endcan
 
+                        @can('refeicaos.create')
                         <a href="{{ route('refeicaos.edit', [$refeicao->id]) }}" class='btn btn-default btn-xs' title="Editar"><i class="glyphicon glyphicon-edit"></i></a>
                         {!! Form::hidden('nome', $refeicao->nome) !!}
                         {!! Form::hidden('inicio', $refeicao->inicio) !!}
@@ -52,6 +53,7 @@
                         @else
                         {!! Form::button('<i class="glyphicon glyphicon-ok-circle"></i>', ['type' => 'submit', 'class' => 'btn btn-success btn-xs',  'title' => 'Habilitar']) !!}
                         @endif
+                        @endcan
                     </div>
                     {!! Form::close() !!}
                 </td>

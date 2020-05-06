@@ -3,23 +3,31 @@
         <thead>
             <tr>
                 <th>Nome (Matrícula)</th>
-                <th>Refeição</th>
-                <th>Valor</th>
-                <th colspan="3">Ação</th>
+                <th>Auxílios</th>
+                <th colspan="3">Ações</th>
             </tr>
         </thead>
         <tbody>
-        @foreach($auxilios as $auxilio)
+        @foreach($users as $user)
+            @if( !count($user->auxilio) )
+                @continue
+            @endif
             <tr>
-                <td>{{ $auxilio->user->name }} ({{ $auxilio->user->username}})</td>
-                <td>{{ $auxilio->refeicao->nome }}</td>
-                <td>{{ $auxilio->refeicao->valor }}</td>
+                <td>{{ $user->name }} ({{ $user->username }})</td>
                 <td>
-                    {!! Form::open(['route' => ['auxilios.destroy', $auxilio->id], 'method' => 'delete']) !!}
-                    <div class='btn-group'>
-                        {!! Form::button('<i class="glyphicon glyphicon-trash"></i>', ['type' => 'submit', 'class' => 'btn btn-danger btn-xs', 'onclick' => "return confirm('Are you sure?')"]) !!}
-                    </div>
-                    {!! Form::close() !!}
+                    @foreach($user->auxilio as $auxilio)
+
+                    {{ $auxilio->refeicao->nome }} ({{ $auxilio->refeicao->getFormattedValueAttribute()}}) ||
+
+                    @endforeach
+                </td>
+                <td>
+                    @can('auxilio.create')
+                            <a href="{{ route('auxilios.manage', [$user->id]) }}" class='btn btn-info btn-xs'>Gerenciar Auxílios </a>
+                    @endcan
+                </td>
+                <td>
+                   
                 </td>
             </tr>
         @endforeach

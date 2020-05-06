@@ -15,6 +15,5 @@
 </div>
 
 <div class="form-group col-sm-12">
-    {!! Form::submit('Avançar', ['class' => 'btn btn-primary']) !!}
-    <a href="{{ route('tickets.index') }}" class="btn btn-default">Voltar</a>
+    {!! Form::submit('Gerar Ticket Virtual', ['class' => 'btn btn-success']) !!}
 </div>

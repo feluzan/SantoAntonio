@@ -7,11 +7,14 @@ use App\Http\Requests\UpdateAuxilioRequest;
 use App\Repositories\AuxilioRepository;
 use App\Http\Controllers\AppBaseController;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Flash;
 use Response;
+use PDF;
 
 use App\User;
 use App\Models\Refeicao;
+use App\Models\Auxilio;
 
 class AuxilioController extends AppBaseController
 {
@@ -32,20 +35,27 @@ class AuxilioController extends AppBaseController
      */
     public function index(Request $request)
     {
-        $auxilios = $this->auxilioRepository->all();
 
+        // $users = User::with('Auxilio')->get();
+        // foreach($users as $u){
+        //     dd($u->auxilio);
+        // }
+
+        // dd($auxilios);
+        $input = $request->all();
+        if(isset($input['search'])){
+            $searchTerm = $input['search'];
+            $users = User::query()
+                        ->where('name', 'LIKE', "%{$searchTerm}%") 
+                        ->orWhere('username', 'LIKE', "%{$searchTerm}%") 
+                        ->get();
+        }else{
+            $users = User::all();
+        }
+        // dd($users);
+        // $auxilios = $this->auxilioRepository->all();
         return view('auxilios.index')
-            ->with('auxilios', $auxilios);
-    }
-
-    /**
-     * Show the form for creating a new Auxilio.
-     *
-     * @return Response
-     */
-    public function create()
-    {
-        return view('auxilios.create');
+            ->with('users', $users);
     }
 
     /**
@@ -64,71 +74,6 @@ class AuxilioController extends AppBaseController
         Flash::success('Auxilio salvo com sucesso.');
 
         return redirect(route('auxilios.manage',[$input['user_id']]));
-    }
-
-    /**
-     * Display the specified Auxilio.
-     *
-     * @param int $id
-     *
-     * @return Response
-     */
-    public function show($id)
-    {
-        $auxilio = $this->auxilioRepository->find($id);
-
-        if (empty($auxilio)) {
-            Flash::error('Auxilio not found');
-
-            return redirect(route('auxilios.index'));
-        }
-
-        return view('auxilios.show')->with('auxilio', $auxilio);
-    }
-
-    /**
-     * Show the form for editing the specified Auxilio.
-     *
-     * @param int $id
-     *
-     * @return Response
-     */
-    public function edit($id)
-    {
-        $auxilio = $this->auxilioRepository->find($id);
-
-        if (empty($auxilio)) {
-            Flash::error('Auxilio not found');
-
-            return redirect(route('auxilios.index'));
-        }
-
-        return view('auxilios.edit')->with('auxilio', $auxilio);
-    }
-
-    /**
-     * Update the specified Auxilio in storage.
-     *
-     * @param int $id
-     * @param UpdateAuxilioRequest $request
-     *
-     * @return Response
-     */
-    public function update($id, UpdateAuxilioRequest $request)
-    {
-        $auxilio = $this->auxilioRepository->find($id);
-
-        if (empty($auxilio)) {
-            Flash::error('Auxilio not found');
-
-            return redirect(route('auxilios.index'));
-        }
-
-        $auxilio = $this->auxilioRepository->update($request->all(), $id);
-
-        Flash::success('Auxilio updated successfully.');
-
-        return redirect(route('auxilios.index'));
     }
 
     /**
@@ -166,5 +111,38 @@ class AuxilioController extends AppBaseController
         // dd($user->auxilio);
         // dd($user, $refeicoes);
         return view('auxilios.individual', compact('user', 'refeicoes'));
+    }
+
+    public function reportBuild(Request $request){
+
+        $users = User::has('auxilio', '>', 0)->get();
+        $refeicaos = Refeicao::all();
+
+        $auxRefeicaos = [];
+        $fields =[];
+        $fields['nome'] = 'Assistido';
+        foreach($refeicaos as $r){
+            $fields[$r->nome] = $r->nome;
+            $auxRefeicaos[$r->nome] = "Não assistido";
+        }
+        $items = [];
+
+        foreach($users as $u){
+            $aux = $auxRefeicaos;
+            $aux['nome'] = $u->name;
+            foreach($u->auxilio as $auxilio){
+                $aux[$auxilio->refeicao->nome] = "Assistido";
+            }
+            $items[] = (object)$aux;
+        }
+
+        $metaData = [
+            'title' => 'Relatório de Auxílios - Emitido por ' . Auth::user()->name . ' em ' . date('d/m/Y H:i:s'),
+            'filter' => '',
+        ];
+        // return view('layouts.reportPDF',compact('items','fields'));
+        $pdf = PDF::loadView('layouts.tableLandscapePDF',compact('items','fields','metaData'))->setPaper('a4', 'landscape');
+        return $pdf->download('[SA]Relatório de Auxílios ' . date('dmyHis') . '.pdf');
+
     }
 }

@@ -1,14 +1,14 @@
 
-@can('user.index')
+@can('users.index')
     <li class="{{ Request::is('user') ? 'active' : '' }}">
-        <a href="{{ route('user.index') }}"><i class="fa fa-user"></i><span>Usuários</span></a>
+        <a href="{{ route('users.index') }}"><i class="fa fa-user"></i><span>Usuários</span></a>
     </li>
     <hr>
 @endcan
 
 
 
-@can('refeicao.manage')
+@can('refeicaos.list')
 <li class="{{ Request::is('refeicaos*') ? 'active' : '' }}">
     <a href="{{ route('refeicaos.index') }}"><i class="fa fa-apple"></i><span>Refeições</span></a>
 </li>
@@ -23,9 +23,9 @@
 
 <hr>
 
-@can('ticket.list')
-    <li class="{{ Route::is('tickets.periodo') ? 'active' : '' }}">
-        <a href="{{ route('tickets.periodo') }}"><i class="fa fa-edit"></i><span>Tickets por Período</span></a>
+@can('tickets.report')
+    <li class="{{ Route::is('tickets.reportIndex') ? 'active' : '' }}">
+        <a href="{{ route('tickets.reportIndex') }}"><i class="fa fa-edit"></i><span>Tickets por Período</span></a>
     </li>
 @endcan
 

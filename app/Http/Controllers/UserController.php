@@ -48,26 +48,6 @@ class UserController extends AppBaseController
     }
 
     /**
-     * Display the specified User.
-     *
-     * @param int $id
-     *
-     * @return Response
-     */
-    public function show($id)
-    {
-        $user = $this->userRepository->find($id);
-
-        if (empty($user)) {
-            Flash::error('User  not found');
-
-            return redirect(route('user.index'));
-        }
-
-        return view('user.show')->with('user', $user);
-    }
-
-    /**
      * Show the form for editing the specified User.
      *
      * @param int $id
@@ -81,7 +61,7 @@ class UserController extends AppBaseController
         if (empty($user)) {
             Flash::error('User not found');
 
-            return redirect(route('user.index'));
+            return redirect(route('users.index'));
         }
 
         return view('user.edit')->with('user', $user);
@@ -102,13 +82,13 @@ class UserController extends AppBaseController
         if (empty($user)) {
             Flash::error('Usuário não encontrado.');
 
-            return redirect(route('user.index'));
+            return redirect(route('users.index'));
         }
 
         $user = $this->userRepository->update($request->all(), $id);
 
         Flash::success('Usuário atualizado com sucesso!');
 
-        return redirect(route('user.index'));
+        return redirect(route('users.index'));
     }
 }

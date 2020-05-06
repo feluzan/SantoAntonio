@@ -23,6 +23,14 @@ GET           /users/{user}               show    users.show
 GET           /users/{user}/edit          edit    users.edit
 PUT|PATCH     /users/{user}               update  users.update
 DELETE        /users/{user}               destroy users.destroy
+
+Route::get('/keys','KeyController@index')->name('keys.index');
+Route::get('/keys/create','KeyController@create')->name('keys.create');
+Route::post('/keys','KeyController@store')->name('keys.store');
+Route::get('/keys/{key}','KeyController@show')->name('keys.show');
+Route::get('/keys/{key}/edit','KeyController@edit')->name('keys.edit');
+Route::pacth('/keys/{key}','KeyController@update')->name('keys.update');
+Route::delete('/keys/{key}','KeyController@destroy')->name('keys.destroy');
 */
 
 Route::redirect('/', '/home', 301);
@@ -33,63 +41,60 @@ Route::get('/home', 'HomeController@index')->middleware('verified');
 
 Route::group(['middleware' => 'auth'], function () {
 
-    // Listar usuarios
-    Route::group(['middleware' => 'can:user.index'], function () {
-        Route::get('/user', 'UserController@index')->name('user.index');
-    });
 
-    //Editar usuario (alterar nivel de acesso)
+    /* ------------- ROTAS USER -----------------------------
+    /* - Listar usuarios (index)
+    /* - Editar usuario (edit/update)
+    /* ---------------------------------------------------------*/
+    Route::get('/users', 'UserController@index')->name('users.index')->middleware('can:users.index');
     Route::group(['middleware' => 'can:user.edit'], function () {
         Route::get('/user/{user}/edit', 'UserController@edit')->name('user.edit');
         Route::patch('/user/{user}', 'UserController@update')->name('user.update');
     });
 
+    /* ------------- ROTAS REFEICAO -----------------------------
+    /* - Listar refeicoes (index)
+    /* - Criar e editar refeicoes (create/store e edit/update)
+    /* - Relatório de refeicoes (reportBuild)
+    /* ---------------------------------------------------------*/
+    Route::get('/refeicaos', 'RefeicaoController@index')->name('refeicaos.index')->middleware('can:refeicaos.list');
+    Route::group(['middleware' => 'can:refeicaos.create'], function () {
+        Route::get('/refeicaos/create','RefeicaoController@create')->name('refeicaos.create');
+        Route::post('/refeicaos','RefeicaoController@store')->name('refeicaos.store');
+        Route::get('/refeicaos/{refeicao}/edit','RefeicaoController@edit')->name('refeicaos.edit');
+        Route::patch('/refeicaos/{refeicao}','RefeicaoController@update')->name('refeicaos.update');
+    });
+    Route::get('/refeicaos/relatorio', 'RefeicaoController@reportBuild')->name('refeicaos.reportBuild')->middleware('can:refeicaos.report');
 
-    //Criar auxilio (conceder/suspender auxílio)
+
+    /* ------------- ROTAS AUXILIO -----------------------------
+    /* - Listar auxilio (index)
+    /* - Criar (conceder) auxilio (manage/store)
+    /* - Deletar (suspender) auxilio (destroy)
+    /* ---------------------------------------------------------*/
+    Route::get('/auxilio', 'AuxilioController@index')->name('auxilios.index')->middleware('can:auxilios.list');
     Route::group(['middleware' => 'can:auxilio.create'], function () {
         Route::get('/auxilio/{user}', 'AuxilioController@manage')->name('auxilios.manage');
-        Route::delete('/auxilio/{auxilio}', 'AuxilioController@destroy')->name('auxilios.destroy');
         Route::post('/auxilio','AuxilioController@store')->name('auxilios.store');
+        Route::delete('/auxilio/{auxilio}', 'AuxilioController@destroy')->name('auxilios.destroy');
     });
-    Route::get('/auxilio', 'AuxilioController@index')->name('auxilios.index')->middleware('can:auxilios.list');
+    Route::get('/auxilios/relatorio', 'AuxilioController@reportBuild')->name('auxilios.reportBuild')->middleware('can:auxilios.report');
+    // Route::get('/auxilio', 'AuxilioController@index')->name('auxilios.index')->middleware('can:auxilios.list');
     // Route::resource('auxilios', 'AuxilioController');
 
 
-    //Gerenciar Refeicoes
-    Route::resource('refeicaos', 'RefeicaoController')->middleware('can:refeicao.manage');
-    Route::get('/refeicaos/relatorio', 'RefeicaoController@reportBuild')->name('refeicaos.reportBuild');
-
-    //Criar tickets
+    /* ------------- ROTAS TICKET -----------------------------
+    /* - Gerar tickets (index) (generate/store)
+    /* - Consultar relatório (reportIndex/reportBuild)
+    /* 
+    /* ---------------------------------------------------------*/
     Route::group(['middleware'=>'can:ticket.create'], function () {
         Route::get('/ticket/{refeicao}/create', 'TicketController@generate')->name('ticket.generate');
         Route::post('/tickets','TicketController@store')->name('tickets.store');
-        Route::get('/tickets', 'TicketController@index')->name('tickets.index');
-        // Route::get('/ticket')
-        // GET           /users/create               create  users.create
     });
+    Route::get('/tickets', 'TicketController@reportIndex')->name('tickets.reportIndex')->middleware('can:tickets.report');
+    Route::post('/tickets/report','TicketController@reportBuild')->name('tickets.reportBuild')->middleware('can:tickets.report');;
 
-    // Route::resource('tickets', 'TicketController');
-
-    //Listar tickets
-    Route::group(['middleware'=>'can:ticket.list'], function () {
-        Route::get('/ticket/periodo', 'TicketController@ticketsPeriodo')->name('tickets.periodo');
-    });
-
-    
-
-
-    Route::post('/ticket/periodo','TicketController@reportBuild')->name('tickets.reportBuild');
-
-    
-
-    
-    
-    
-    
-    
-    // Route::get('/auxilio/{user}', 'AuxilioController@manage')->name('auxilios.manage');
-    
-    // Route::get();
 });
 
 

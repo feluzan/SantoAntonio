@@ -16,7 +16,7 @@
             <div class="box-body">
                 <div class="search field">
                     <!-- search form (Optional) -->
-                    <form action="{{ route('user.index') }}" method="get" class="">
+                    <form action="{{ route('users.index') }}" method="get" class="">
                         <div class="input-group">
                             <input type="text" name="search" class="form-control" placeholder="Buscar..."/>
                             <span class="input-group-btn">
