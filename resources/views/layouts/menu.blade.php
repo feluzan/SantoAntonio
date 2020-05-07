@@ -27,5 +27,9 @@
     <li class="{{ Route::is('tickets.reportIndex') ? 'active' : '' }}">
         <a href="{{ route('tickets.reportIndex') }}"><i class="fa fa-edit"></i><span>Tickets por Período</span></a>
     </li>
+
+    <li class="{{ Route::is('tickets.sumaryIndex') ? 'active' : '' }}">
+        <a href="{{ route('tickets.sumaryIndex') }}"><i class="fa fa-edit"></i><span>Sumarização de Tickets</span></a>
+    </li>
 @endcan
 

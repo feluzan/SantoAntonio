@@ -86,7 +86,7 @@ Route::group(['middleware' => 'auth'], function () {
     /* ------------- ROTAS TICKET -----------------------------
     /* - Gerar tickets (index) (generate/store)
     /* - Consultar relatório (reportIndex/reportBuild)
-    /* 
+    /* - Sumarização de tickets (sumaryIndex/sumaryBuild)
     /* ---------------------------------------------------------*/
     Route::group(['middleware'=>'can:ticket.create'], function () {
         Route::get('/ticket/{refeicao}/create', 'TicketController@generate')->name('ticket.generate');
@@ -94,6 +94,9 @@ Route::group(['middleware' => 'auth'], function () {
     });
     Route::get('/tickets', 'TicketController@reportIndex')->name('tickets.reportIndex')->middleware('can:tickets.report');
     Route::post('/tickets/report','TicketController@reportBuild')->name('tickets.reportBuild')->middleware('can:tickets.report');;
+
+    Route::get('/tickets/sumario', 'TicketController@sumaryIndex')->name('tickets.sumaryIndex')->middleware('can:tickets.report');
+    Route::post('/tickets/sumario/report','TicketController@sumaryBuild')->name('tickets.sumaryBuild')->middleware('can:tickets.report');;
 
 });
 

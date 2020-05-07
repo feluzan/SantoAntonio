@@ -78,38 +78,7 @@
             
             th, td {
                 font-weight: unset;
-                padding-right: 10px;
-            }
-            
-            /* .column1 {
-                width: 33%;
-                padding-left: 40px;
-            }
-            
-            .column2 {
-                width: 13%;
-            }
-            
-            .column3 {
-                width: 22%;
-            }
-            
-            .column4 {
-                width: 19%;
-            }
-            
-            .column5 {
-                width: 13%;
-            } */
-            
-            .table100-head th {
-                /* padding-top: 18px; */
-                /* padding-bottom: 18px; */
-            }
-            
-            .table100-body td {
-                /* padding-top: 16px; */
-                /* padding-bottom: 16px; */
+                padding-right: 1px;
             }
             
             /*==================================================================
@@ -235,7 +204,13 @@
                                         $contador = 1;
                                     @endphp
                                     @foreach($fields as $field_name => $field_label)
-                                        <th class="cell100 column{{ $contador }}">{{ $field_label }}</th>
+                                        <th style="{{ isset($extraStyle['th']) ? $extraStyle['th'] : '' }}" class="cell100 column{{ $contador }}">
+                                            <div style="{{ isset($extraStyle['th div']) ? $extraStyle['th div'] : '' }}">
+                                                <span style="{{ isset($extraStyle['th span']) ? $extraStyle['th span'] : '' }}">
+                                                    {{ $field_label }}
+                                                </span>
+                                            </div>
+                                        </th>
                                         @php
                                         $contador += 1;
                                         @endphp
@@ -253,7 +228,7 @@
                                                 $contador = 1;
                                             @endphp
                                             @foreach($fields as $field_name => $field_label)
-                                                <td class="cell100 column{{ $contador }}">{!! $helper->get_dot_notation($item, $field_name)  !!}</td>
+                                                <td style="{{ isset($extraStyle['td']) ? $extraStyle['td'] : '' }}" class="cell100 column{{ $contador }}">{!! $helper->get_dot_notation($item, $field_name)  !!}</td>
                                                 @php
                                                 $contador += 1;
                                                 @endphp

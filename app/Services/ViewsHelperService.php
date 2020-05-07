@@ -88,4 +88,8 @@ class ViewsHelperService
         return number_format ( $value*100 , 2 , ',' , '.' ) . '%';
     }
 
+    public function formatCurrencyValue($value){
+        return "R$ " . number_format ( $value , 2 , ',' , '.' );
+    }
+
 }

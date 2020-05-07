@@ -64,6 +64,14 @@ class User extends Authenticatable
         return $this->hasMany('App\Models\Auxilio');
     }
 
+    /**
+     * Get the auxilio for the user.
+     */
+    public function ticket()
+    {
+        return $this->hasMany('App\Models\Ticket','assistido_id');
+    }
+
 
     public function getFormattedCreatedAtAttribute()
     {
