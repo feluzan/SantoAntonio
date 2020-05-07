@@ -28,7 +28,7 @@
                             
                             <div class='btn-group pull-right'>
                                 <a href="" class="btn btn-primary " id="periodoLink">Visualizar na tela</a>
-                                {!! Form::button('Exportar PDF', ['type' => 'submit', 'class' => 'btn btn-default',  'title' => 'Emitir PDF']) !!}
+                                {!! Form::button('Exportar <i class="far fa-file-pdf"></i>', ['type' => 'submit', 'class' => 'btn btn-default',  'title' => 'Emitir PDF']) !!}
                             </div>
                             
                         {!! Form::close() !!}

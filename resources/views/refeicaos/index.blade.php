@@ -8,7 +8,7 @@
            <a class="btn btn-primary pull-right" style="margin-top: -10px;margin-bottom: 5px;margin-left:10px;" href="{{ route('refeicaos.create') }}">Adicionar Refeição</a>
            @endcan
            @can('refeicaos.report')
-           <a class="btn bg-navy pull-right" style="margin-top: -10px;margin-bottom: 5px" href="{{ route('refeicaos.reportBuild') }}">Exportar PDF</a>
+           <a class="btn bg-navy pull-right" style="margin-top: -10px;margin-bottom: 5px" href="{{ route('refeicaos.reportBuild') }}"><i class="far fa-file-pdf"></i></a>
            @endcan
         </h1>
     </section>

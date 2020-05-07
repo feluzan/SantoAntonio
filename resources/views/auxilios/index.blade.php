@@ -5,7 +5,7 @@
         <h1 class="pull-left">Auxilios</h1>
         <h1 class="pull-right">
            @can('auxilios.report')
-           <a class="btn bg-navy pull-right" style="margin-top: -10px;margin-bottom: 5px" href="{{ route('auxilios.reportBuild') }}">Exportar PDF</a>
+           <a class="btn bg-navy pull-right" style="margin-top: -10px;margin-bottom: 5px" href="{{ route('auxilios.reportBuild') }}"><i class="far fa-file-pdf"></i></a>
            @endcan
         </h1>
         

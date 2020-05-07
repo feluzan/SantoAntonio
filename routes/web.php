@@ -37,7 +37,7 @@ Route::redirect('/', '/home', 301);
 
 Auth::routes(['verify' => true]);
 
-Route::get('/home', 'HomeController@index')->middleware('verified');
+Route::get('/home', 'HomeController@index')->name('home')->middleware('verified');
 
 Route::group(['middleware' => 'auth'], function () {
 

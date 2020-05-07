@@ -25,7 +25,7 @@
                             <!-- <br> -->
                             
                             <div class='btn-group pull-right'>
-                                {!! Form::button('Exportar PDF', ['type' => 'submit', 'class' => 'btn btn-default',  'title' => 'Emitir PDF']) !!}
+                                {!! Form::button('Exportar <i class="far fa-file-pdf"></i>', ['type' => 'submit', 'class' => 'btn btn-default',  'title' => 'Emitir PDF']) !!}
                             </div>
                             
                         {!! Form::close() !!}
