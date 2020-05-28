@@ -27,7 +27,7 @@ function onChangeFilters(){
     var selectRefeicao = document.getElementById('selectRefeicaoInput');
 
     var refeicao = selectRefeicao.options[selectRefeicao.selectedIndex].value;
-    document.getElementById("periodoLink").href="/ticket/periodo?startDate=" + startDate + "&endDate=" + endDate + "&refeicaoID=" + refeicao;
+    document.getElementById("periodoLink").href="/tickets?startDate=" + startDate + "&endDate=" + endDate + "&refeicaoID=" + refeicao;
     
 };
 
