@@ -211,6 +211,9 @@ class TicketController extends AppBaseController
             $fields[$looper->format('d/m/y')] = $looper->format('d/m');
             $looper = $looper->addDay();
         }
+        $dates[$endDate->format('d/m/y')] = 0;
+        $fields[$endDate->format('d/m/y')] = $endDate->format('d/m/y');
+        $datesHas[$endDate->format('d/m/y')] = 0;
 
         $items = [];
 
