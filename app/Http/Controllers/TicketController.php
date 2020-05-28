@@ -163,7 +163,7 @@ class TicketController extends AppBaseController
         $fields =[];
         $fields['nome'] = 'Assistido';
         // dd($diff);
-        while($looper->diffInDays($endDate)>0){
+        while($looper->diffInDays($endDate)>=0){
             $dates[$looper->format('d/m/y')] = 0;
             $fields[$looper->format('d/m/y')] = $looper->format('d/m/y');
             
