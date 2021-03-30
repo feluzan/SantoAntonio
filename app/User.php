@@ -72,6 +72,22 @@ class User extends Authenticatable
         return $this->hasMany('App\Models\Ticket','assistido_id');
     }
 
+    /**
+     * Get the documento for the user.
+     */
+    public function documentos()
+    {
+        return $this->hasMany('App\Models\Documento','user_id');
+    }
+
+    /**
+     * Get authenticated documentos for the user.
+     */
+    public function documentosAutenticados()
+    {
+        return $this->hasMany('App\Models\Documento','autenticador_id');
+    }
+
 
     public function getFormattedCreatedAtAttribute()
     {

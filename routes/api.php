@@ -26,3 +26,5 @@ Route::resource('refeicaos', 'RefeicaoAPIController');
 Route::resource('tickets', 'TicketAPIController');
 
 Route::resource('auxilios', 'AuxilioAPIController');
+
+Route::resource('documentos', 'DocumentoAPIController');
