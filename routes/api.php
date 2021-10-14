@@ -27,4 +27,6 @@ Route::resource('tickets', 'TicketAPIController');
 
 Route::resource('auxilios', 'AuxilioAPIController');
 
+
 Route::resource('permissao_acessos', 'PermissaoAcessoAPIController');
+
