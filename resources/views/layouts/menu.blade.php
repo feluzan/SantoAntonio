@@ -37,9 +37,3 @@
     </li>
 @endcan
 
-<hr>
-
-<li class="{{ Request::is('documentos*') ? 'active' : '' }}">
-    <a href="{{ route('documentos.index') }}"><i class="fa fa-edit"></i><span>Biblioteca de Documentos</span></a>
-</li>
-

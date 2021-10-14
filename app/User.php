@@ -80,7 +80,6 @@ class User extends Authenticatable
         return $this->hasMany('App\Models\PermissaoAcesso','user_id');
     }
 
-
     public function getFormattedCreatedAtAttribute()
     {
         return $this->formatDate($this->created_at);

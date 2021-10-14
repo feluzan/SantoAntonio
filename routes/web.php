@@ -116,5 +116,7 @@ Route::group(['middleware' => 'auth'], function () {
 
 
 
-// Route::resource('permissaoAcessos', 'PermissaoAcessoController');
 
+
+
+// Route::resource('permissaoAcessos', 'PermissaoAcessoController');
