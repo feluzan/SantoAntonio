@@ -90,6 +90,8 @@ Route::group(['middleware' => 'auth'], function () {
     /* ---------------------------------------------------------*/
     Route::group(['middleware'=>'can:ticket.create'], function () {
         Route::get('/ticket/{refeicao}/create', 'TicketController@generate')->name('ticket.generate');
+        Route::get('/tickets/{refeicao}/create/{assistido}', 'TicketController@confirmview')->name('ticket.confirmview');
+        Route::post('/tickets/confirm', 'TicketController@confirm')->name('ticket.confirm');
         Route::post('/tickets','TicketController@store')->name('tickets.store');
     });
     Route::get('/tickets', 'TicketController@reportIndex')->name('tickets.reportIndex')->middleware('can:tickets.report');
@@ -98,8 +100,23 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/tickets/sumario', 'TicketController@sumaryIndex')->name('tickets.sumaryIndex')->middleware('can:tickets.report');
     Route::post('/tickets/sumario/report','TicketController@sumaryBuild')->name('tickets.sumaryBuild')->middleware('can:tickets.report');;
 
+
+    /* ------------- ROTAS PERMISSAO ACESSO -----------------------------
+    /* 
+    /* ---------------------------------------------------------*/
+    Route::group(['middleware'=>'can:permissaoAcesso.create'], function () {
+        // Route::get('/permissaoAcessos/{user}/create', 'PermissaoAcessoController@generate')->name('permissaoAcessos.generate');
+        
+        
+    });
+    Route::get('/permissaoAcesso', 'PermissaoAcessoController@index')->name('permissaoAcessos.index');
+    Route::post('/permissaoAcessos','PermissaoAcessoController@store')->name('permissaoAcessos.store')->middleware('can:permissaoAcesso.manage');
+    Route::delete('/permissaoAcessos/{permissaoAcesso}', 'PermissaoAcessoController@destroy')->name('permissaoAcessos.destroy')->middleware('can:permissaoAcesso.manage');
 });
 
 
 
 
+
+
+// Route::resource('permissaoAcessos', 'PermissaoAcessoController');

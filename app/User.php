@@ -65,13 +65,20 @@ class User extends Authenticatable
     }
 
     /**
-     * Get the auxilio for the user.
+     * Get the ticket for the user.
      */
     public function ticket()
     {
         return $this->hasMany('App\Models\Ticket','assistido_id');
     }
 
+    /**
+     * Get the permissaoAcesso for the user.
+     */
+    public function permissaoAcesso()
+    {
+        return $this->hasMany('App\Models\PermissaoAcesso','user_id');
+    }
 
     public function getFormattedCreatedAtAttribute()
     {
@@ -99,5 +106,18 @@ class User extends Authenticatable
 
     public function getName(){
         return $this->name;
+    }
+
+    public function getAvatar(){
+        return $this->avatar;
+    }
+
+    public function getCodigosPermissaoAcesso(){
+        $permissoes = array();
+        foreach($this->permissaoAcesso as $permissao){
+            $permissoes[] = $permissao->getCodigo();
+        }
+
+        return $permissoes;
     }
 }

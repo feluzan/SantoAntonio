@@ -3,7 +3,7 @@
 @section('content')
     <section class="content-header">
         <h1>
-            Ticket
+            Permissao Acesso
         </h1>
     </section>
     <div class="content">
@@ -11,9 +11,9 @@
         <div class="box box-primary">
             <div class="box-body">
                 <div class="row">
-                    {!! Form::open(['route' => 'tickets.confirm']) !!}
+                    {!! Form::open(['route' => 'permissaoAcessos.store']) !!}
 
-                        @include('tickets.fields')
+                        @include('permissao_acessos.fields')
 
                     {!! Form::close() !!}
                 </div>

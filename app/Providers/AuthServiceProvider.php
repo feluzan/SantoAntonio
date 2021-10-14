@@ -7,6 +7,9 @@ use Illuminate\Support\Facades\Gate;
 use Illuminate\Auth\Access\Response;
 use Illuminate\Support\Facades\Auth;
 
+use App\Models\PermissaoAcesso;
+use App\User;
+
 class AuthServiceProvider extends ServiceProvider
 {
     /**
@@ -27,42 +30,53 @@ class AuthServiceProvider extends ServiceProvider
     {
         $this->registerPolicies();
 
-        //Níveis no banco de dados
-        // 100 => God mode (inserir manualmente no banco)
-        // 0 => 'Sem Funções',
-        // 1 => 'Administrador',
-        // 2 => 'Gestor do Auxílio',
-        // 3 => 'Restaurante',
-        // 4 => 'Consultas de Relatórios',
+        /**
+         * O controle de acesso é criado de forma estática,
+         * porém é atribuído de forma dinâmica.
+         * 
+         * 
+         * 1 => "Alterar permissões de acesso dos usuários"
+         * 2 => "Ver os usuários do sistema"
+         * 3 => "Editar os usuários do sistema"
+         * 4 => "Ver as refeições cadastradas"
+         * 5 => "Criar e editar as refeições"
+         * 6 => "Ver os auxílios cadastrados"
+         * 7 => "Conceder auxílios aos usuários"
+         * 8 => "Gerar relatórios de auxílios"
+         * 9 => "Emitir tickets"
+         * 10 => "Ver tickets emitidos"
+         * 11 => "Ver resumo de uso diário (dashboard)"
+         * 
+         */
+
+        Gate::define('permissaoAcesso.manage', function () {
+            return $this->isAuthorized(1);
+        });
+
 
 
         // ---------------------- USER -------------------------------------
         //Usuarios que podem listar usuarios: Administrador e Gestor do Auxílio
         Gate::define('users.index', function () {
-            $user = Auth::user();
-            if(in_array($user->level,array(100,1,2))) return Response::allow();
-            return Response::deny('Você precisa ser um Administrador ou um Gestor de Auxílio para acessar essa função.');
+            return $this->isAuthorized(2);
         });
 
         //Usuarios que podem editar usuarios: Administrador
         Gate::define('user.edit', function () {
-            $user = Auth::user();
-            if(in_array($user->level,array(100,1))) return Response::allow();
-            return Response::deny('Você precisa ser um Administrador para acessar essa função.');
+            return $this->isAuthorized(3);
         });
 
 
         // ---------------------- REFEICAO -------------------------------------
         //Usuarios que podem listar refeições: Todos
         Gate::define('refeicaos.list', function () {
-            return Response::allow();
+            return $this->isAuthorized(4);
+        
         });
 
         //Usuarios que podem criar e editar refeicoes: Administrador
         Gate::define('refeicaos.create', function () {
-            $user = Auth::user();
-            if(in_array($user->level,array(100,1))) return Response::allow();
-            return Response::deny('Você precisa ser um Administrador para acessar essa função.');
+            return $this->isAuthorized(5);
         });
 
         //Usuarios que podem gerar relatórios de refeicoes: Todos
@@ -74,39 +88,29 @@ class AuthServiceProvider extends ServiceProvider
         // ---------------------- auxilio -------------------------------------
         //Usuarios que podem listar auxilios: Administrador, Gerenciador de Auxílio
         Gate::define('auxilios.list', function () {
-            $user = Auth::user();
-            if(in_array($user->level,array(100,1,2))) return Response::allow();
-            return Response::deny('Você precisa ser um Administrador ou um Gerenciador de Auxílio para acessar essa função.');
+            return $this->isAuthorized(6);
         });
 
         //Usuarios que podem conceder (criar) auxilio: Gerenciador de Auxilios
         Gate::define('auxilio.create', function () {
-            $user = Auth::user();
-            if(in_array($user->level,array(100,2))) return Response::allow();
-            return Response::deny('Você precisa ser um Gerenciador de Auxilio para acessar essa função.');
+            return $this->isAuthorized(7);
         });
 
         //Usuarios que podem gerar relatórios de auxilios: Administrador, Gestor
         Gate::define('auxilios.report', function () {
-            $user = Auth::user();
-            if(in_array($user->level,array(100,1,2))) return Response::allow();
-            return Response::deny('Você precisa ser um Gerenciador de Auxilio para acessar essa função.');
+            return $this->isAuthorized(8);
         });
 
 
         // ---------------------- ticket -------------------------------------
         //Gerar tickets
         Gate::define('ticket.create', function () {
-            $user = Auth::user();
-            if(in_array($user->level,array(100,3))) return Response::allow();
-            return Response::deny('Você precisa ser um Restaurante para acessar essa função.');
+            return $this->isAuthorized(9);
         });
 
         //Listar tickets:
         Gate::define('tickets.report', function () {
-            $user = Auth::user();
-            if(in_array($user->level,array(100,1,2,3))) return Response::allow();
-            return Response::deny('Você precisa ser um Administrador para acessar essa função.');
+            return $this->isAuthorized(10);
         });
 
         
@@ -116,15 +120,25 @@ class AuthServiceProvider extends ServiceProvider
         // ---------------------- dashboard -------------------------------------
         //Usuarios que visualizam a tabela de resumo de uso diário
         Gate::define('dashboard.table', function () {
-            $user = Auth::user();
-            if(in_array($user->level,array(100,1,2))) return Response::allow();
-            return Response::deny('Você precisa ser um Gerenciador de Auxilio para acessar essa função.');
+            return $this->isAuthorized(11);
         });
 
         
 
+
+        Gate::define('permissaoAcessos.create', function () {
+            return Response::allow();
+        });
         
 
         
+    }
+
+    private function isAuthorized($codigo){
+        $user = Auth::user();
+        $permissoes = $user->getCodigosPermissaoAcesso();
+        if(in_array($codigo,$permissoes)) return Response::allow();
+        return Response::deny('Você não tem permissão para executar essa ação.');
+
     }
 }
