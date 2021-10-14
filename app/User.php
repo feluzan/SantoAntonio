@@ -65,7 +65,7 @@ class User extends Authenticatable
     }
 
     /**
-     * Get the auxilio for the user.
+     * Get the ticket for the user.
      */
     public function ticket()
     {
@@ -73,19 +73,11 @@ class User extends Authenticatable
     }
 
     /**
-     * Get the documento for the user.
+     * Get the permissaoAcesso for the user.
      */
-    public function documentos()
+    public function permissaoAcesso()
     {
-        return $this->hasMany('App\Models\Documento','user_id');
-    }
-
-    /**
-     * Get authenticated documentos for the user.
-     */
-    public function documentosAutenticados()
-    {
-        return $this->hasMany('App\Models\Documento','autenticador_id');
+        return $this->hasMany('App\Models\PermissaoAcesso','user_id');
     }
 
 
@@ -115,5 +107,18 @@ class User extends Authenticatable
 
     public function getName(){
         return $this->name;
+    }
+
+    public function getAvatar(){
+        return $this->avatar;
+    }
+
+    public function getCodigosPermissaoAcesso(){
+        $permissoes = array();
+        foreach($this->permissaoAcesso as $permissao){
+            $permissoes[] = $permissao->getCodigo();
+        }
+
+        return $permissoes;
     }
 }

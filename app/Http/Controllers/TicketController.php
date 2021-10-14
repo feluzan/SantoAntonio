@@ -76,6 +76,35 @@ class TicketController extends AppBaseController
         return redirect(route('ticket.generate',[$refeicao->id]));
     }
 
+    public function confirm(CreateTicketRequest $request){
+        $input = $request->all();
+
+        $assistido = User::where('username',$input['username'])->first();
+        $refeicao = Refeicao::find($input['refeicao_id']);
+        
+        //verifica se o $assistido possui o auxilio para a $refeicao
+        $auxilio = Auxilio::where('user_id',$assistido->id)->where('refeicao_id',$refeicao->id)->first();
+        if($auxilio==null){
+            Flash::error('Ticket Virtual não gerado. ' . $assistido->name . ' não tem auxílio para essa refeição. ');
+            return redirect(route('ticket.generate',[$refeicao->id]));
+        }
+
+        //verifica se o $assistido já emitiu um ticket para a $refeicao na data de hoje
+        $todayTicket = Ticket::where('assistido_id',$assistido->id)->where('refeicao_id',$refeicao->id)->whereDate('created_at', Carbon::today())->first();
+        if($todayTicket!=null){
+            Flash::error('Ticket Virtual não gerado. ' . $assistido->name . ' já realizou essa refeição hoje. ');
+            return redirect(route('ticket.generate',[$refeicao->id]));
+        }
+
+        // $input['assistido_id']=$assistido->id;
+        return redirect(route('ticket.confirmview',[$refeicao->id, $assistido->id]));
+    }
+
+    public function confirmview(Refeicao $refeicao, User $assistido){
+        // dd("confirmview",$refeicao,$assistido);
+        return view('tickets.confirm',compact('refeicao','assistido'));
+    }
+
     /**
      * Display the specified Ticket.
      *
