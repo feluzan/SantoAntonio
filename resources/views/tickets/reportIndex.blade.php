@@ -62,7 +62,7 @@
                                 'assistido.name' => 'Assistido',
                                 'emissor.name' => 'Emissor',
                                 'formatted_value' => 'Valor',
-                                'formatted_created_at' => 'Emissão',
+                                'formatted_data_refeicao' => 'Emissão',
                             ],
                             'items' => $tickets,
                         ])

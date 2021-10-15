@@ -37,3 +37,12 @@
     </li>
 @endcan
 
+
+<hr>
+
+@can('tickets.lancamentopassado')
+    <li class="{{ Route::is('tickets.lancamentopassado') ? 'active' : '' }}">
+        <a href="{{ route('tickets.lancamentopassado') }}"><i class="fa fa-clipboard-list"></i><span>Lançar Tickets do Passado</span></a>
+    </li>
+
+@endcan

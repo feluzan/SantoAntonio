@@ -100,6 +100,11 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/tickets/sumario', 'TicketController@sumaryIndex')->name('tickets.sumaryIndex')->middleware('can:tickets.report');
     Route::post('/tickets/sumario/report','TicketController@sumaryBuild')->name('tickets.sumaryBuild')->middleware('can:tickets.report');;
 
+    Route::get('/tickets/lancamentopassado', 'TicketController@lancamentoPassado')->name('tickets.lancamentopassado')->middleware('can:tickets.lancamentopassado');
+    Route::post('/tickets/lancamentopassado', 'TicketController@pastStore')->name('tickets.pastStore')->middleware('can:tickets.lancamentopassado');
+
+    Route::get('/tickets/lancamentopassado/resultado', 'TicketController@lancamentoPassadoResult')->name('tickets.lancamentoPassadoResult')->middleware('can:tickets.lancamentopassado');
+
 
     /* ------------- ROTAS PERMISSAO ACESSO -----------------------------
     /* 

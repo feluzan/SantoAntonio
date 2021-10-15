@@ -63,13 +63,14 @@ class TicketController extends AppBaseController
         }
 
         //verifica se o $assistido já emitiu um ticket para a $refeicao na data de hoje
-        $todayTicket = Ticket::where('assistido_id',$assistido->id)->where('refeicao_id',$refeicao->id)->whereDate('created_at', Carbon::today())->first();
+        $todayTicket = Ticket::where('assistido_id',$assistido->id)->where('refeicao_id',$refeicao->id)->whereDate('data_refeicao', Carbon::today())->first();
         if($todayTicket!=null){
             Flash::error('Ticket Virtual não gerado. ' . $assistido->name . ' já realizou essa refeição hoje. ');
             return redirect(route('ticket.generate',[$refeicao->id]));
         }
 
         $input['assistido_id']=$assistido->id;
+        $input['data_refeicao'] = Carbon::now("Y-m-d h:i:s");
         $ticket = $this->ticketRepository->create($input);
         Flash::success('Ticket Virtual para  ' . $assistido->name . ' gerado com sucesso.');
 
@@ -90,7 +91,7 @@ class TicketController extends AppBaseController
         }
 
         //verifica se o $assistido já emitiu um ticket para a $refeicao na data de hoje
-        $todayTicket = Ticket::where('assistido_id',$assistido->id)->where('refeicao_id',$refeicao->id)->whereDate('created_at', Carbon::today())->first();
+        $todayTicket = Ticket::where('assistido_id',$assistido->id)->where('refeicao_id',$refeicao->id)->whereDate('data_refeicao', Carbon::today())->first();
         if($todayTicket!=null){
             Flash::error('Ticket Virtual não gerado. ' . $assistido->name . ' já realizou essa refeição hoje. ');
             return redirect(route('ticket.generate',[$refeicao->id]));
@@ -142,9 +143,9 @@ class TicketController extends AppBaseController
         // dd($refeicaoSelectOptions);
         
         if($refeicaoID>0){
-            $tickets = Ticket::whereBetween(DB::raw('date(created_at)'), [$startDate, $endDate])->where('refeicao_id',$refeicaoID)->get();
+            $tickets = Ticket::whereBetween(DB::raw('date(data_refeicao)'), [$startDate, $endDate])->where('refeicao_id',$refeicaoID)->get();
         }else{
-            $tickets = Ticket::whereBetween(DB::raw('date(created_at)'), [$startDate, $endDate])->get();
+            $tickets = Ticket::whereBetween(DB::raw('date(data_refeicao)'), [$startDate, $endDate])->get();
         }
         
 
@@ -158,10 +159,10 @@ class TicketController extends AppBaseController
         $refeicaoID = $request->input('refeicaoID') ? $request->input('refeicaoID') : 0;
 
         if($refeicaoID>0){
-            $items = Ticket::whereBetween(DB::raw('date(created_at)'), [$startDate, $endDate])->where('refeicao_id',$refeicaoID)->get();
+            $items = Ticket::whereBetween(DB::raw('date(data_refeicao)'), [$startDate, $endDate])->where('refeicao_id',$refeicaoID)->get();
             $refeicaoNome = Refeicao::find($refeicaoID)->nome;
         }else{
-            $items = Ticket::whereBetween(DB::raw('date(created_at)'), [$startDate, $endDate])->get();
+            $items = Ticket::whereBetween(DB::raw('date(data_refeicao)'), [$startDate, $endDate])->get();
             $refeicaoNome = 'Todas';
         }
 
@@ -170,7 +171,7 @@ class TicketController extends AppBaseController
             'assistido.name' => 'Assistido',
             'emissor.name' => 'Emissor',
             'formatted_value' => 'Valor',
-            'formatted_created_at' => 'Emissão'
+            'formatted_data_refeicao' => 'Emissão'
         ];
 
         $metaData = [
@@ -210,9 +211,9 @@ class TicketController extends AppBaseController
             $aux = $dates;
             $aux['nome'] = $u->name;
             $aux['assinatura'] = "________________________________";
-            $tickets = Ticket::where('assistido_id',$u->id)->whereBetween(DB::raw('date(created_at)'), [$startDate, $endDate])->get();
+            $tickets = Ticket::where('assistido_id',$u->id)->whereBetween(DB::raw('date(data_refeicao)'), [$startDate, $endDate])->get();
             foreach($tickets as $t){
-                $aux[$t->created_at->format('d/m/y')]+= $t->valor;
+                $aux[$t->data_refeicao->format('d/m/y')]+= $t->valor;
             }
             $items[] = (object)$aux;
         }
@@ -248,17 +249,15 @@ class TicketController extends AppBaseController
 
         $users = User::has('ticket', '>', 0)->get();
 
-        
-
         foreach($users as $u){
             $aux = $dates;
             $aux['nome'] = $u->name;
             $aux['assinatura'] = "____________________";
             $aux['total'] = 0;
-            $tickets = Ticket::where('assistido_id',$u->id)->whereBetween(DB::raw('date(created_at)'), [$startDate, $endDate])->get();
+            $tickets = Ticket::where('assistido_id',$u->id)->whereBetween(DB::raw('date(data_refeicao)'), [$startDate, $endDate])->get();
             foreach($tickets as $t){
-                $aux[$t->created_at->format('d/m/y')]+= $t->valor;
-                $datesHas[$t->created_at->format('d/m/y')]+=1;
+                $aux[$t->data_refeicao->format('d/m/y')]+= $t->valor;
+                $datesHas[$t->data_refeicao->format('d/m/y')]+=1;
                 $aux['total'] += $t->valor;
             }
             $items[] = (object)$aux;
@@ -274,8 +273,6 @@ class TicketController extends AppBaseController
                 unset($fields[$key]);
             }
         }
-
-        // dd($items);
         
 
         $metaData = [
@@ -292,4 +289,81 @@ class TicketController extends AppBaseController
         return $pdf->download('[SA]Sumário de Valores ' . date('dmyHis') . '.pdf');
 
     }
+
+    public function lancamentoPassado(Request $request){
+        $date = $request->input('date') ? Carbon::create($request->input('date')) : Carbon::today()->subDays(1);
+        $refeicaoOptions = \App\Models\Refeicao::pluck('nome','id')->toArray();
+        return view('tickets.lancamentopassado', compact('date', 'refeicaoOptions'));
+    }
+
+    public function pastStore(CreateTicketRequest $request){
+
+        $input = $request->all();
+
+        $date = Carbon::create($input['dateInput']);
+        $today = Carbon::today();
+        $listaMatriculas = $input['listaMatriculas'];
+
+        // Caso a data passada não seja de dia anterior retorna para a tela de lançamento
+        if(!$date->lessThan($today)){
+            Flash::error('Você não pode lançar no dia de hoje tickets para o dia ' . $date->format('d/m/Y') . '.');
+            $date = $request->input('date') ? Carbon::create($request->input('date')) : Carbon::today()->subDays(1);
+            $refeicaoOptions = \App\Models\Refeicao::pluck('nome','id')->toArray();
+            return view('tickets.lancamentopassado', compact('date', 'refeicaoOptions', 'listaMatriculas'));
+        }
+
+        $refeicao = Refeicao::find($input['refeicao_id']);
+        $matriculasArray = preg_split("/\r\n|\n|\r/", $listaMatriculas);
+        $log = array();
+
+        foreach($matriculasArray as $matricula){
+            $assistido = User::where('username',$matricula)->first();
+
+            if($assistido == null){
+                $log[] = array(false,'Ticket Virtual não gerado. ' . $matricula . ' não existe no sistema. ');
+                continue;
+            }
+
+            //verifica se o $assistido possui o auxilio para a $refeicao
+            $auxilio = Auxilio::where('user_id',$assistido->id)->where('refeicao_id',$refeicao->id)->first();
+            if($auxilio==null){
+                $log[] = array(false,'Ticket Virtual não gerado. ' . $assistido->name . '(' . $assistido->username . ')' . ' não tem auxílio para essa refeição. ');
+                continue;
+            }
+
+            //verifica se o $assistido já emitiu um ticket para a $refeicao na $date
+            $todayTicket = Ticket::where('assistido_id',$assistido->id)->where('refeicao_id',$refeicao->id)->whereDate('data_refeicao', $date)->first();
+            if($todayTicket!=null){
+                $log[] = array(false,'Ticket Virtual não gerado. ' . $assistido->name . '(' . $assistido->username . ')' . ' já realizou havia realizado essa refeição para o dia ' . $date->format('d/m/Y') . '.');
+                continue;
+            }
+
+            $input['assistido_id']=$assistido->id;
+            $input['data_refeicao'] = $date->format('Y-m-d H:i:s');
+            // dd($input['data_refeicao']);
+            $input['valor'] = $refeicao->valor;
+            $input['emissor_id'] = auth()->user()->id;
+
+            // dd($input);
+            $ticket = $this->ticketRepository->create($input);
+            $log[] = array(true,'Ticket Virtual para  ' . $assistido->name . '(' . $assistido->username . ')' . ' gerado com sucesso.');
+        }
+
+        // return view('tickets.lancamentoPassadoResult',compact('log','refeicao','date'));
+        return redirect(route('tickets.lancamentoPassadoResult',['log'=>$log, 'refeicao'=>$refeicao, 'date'=>$date]) );
+        // return redirect()->action('TicketController@lancamentoPassadoResult',['log'=>$log, 'refeicao'=>$refeicao, 'date'=>$date]);
+        // return redirect(route('tickets.lancamentoPassadoResult',[$log=>$log, $refeicao=>$refeicao, $date=>$date]));
+        // return redirect()->route('tickets.lancamentoPassadoResult', ['log'=>$log, 'refeicao'=>$refeicao, 'date'=>$date]);
+        // dd($matriculasArray);
+    }
+
+    public function lancamentoPassadoResult(Request $request){
+        // dd($request->input('log'));
+        $log = $request->input('log');
+        $refeicao = Refeicao::find($request->input('refeicao'));
+        $date = $date = Carbon::create($request->input('date')['date'])->format('d/m/Y');
+        // dd($refeicao);
+        return view('tickets.lancamentoPassadoResult',compact('log','refeicao','date'));
+    }
+
 }
