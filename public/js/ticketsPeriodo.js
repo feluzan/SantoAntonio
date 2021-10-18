@@ -24,20 +24,16 @@ function onChangeFilters(){
     // alert('opa');
     var startDate = document.getElementById('startDateInput').value;
     var endDate = document.getElementById('endDateInput').value;
-    var selectRefeicao = document.getElementById('selectRefeicaoInput');
+    // var selectRefeicao = document.getElementById('selectRefeicaoInput');
 
-    var refeicao = selectRefeicao.options[selectRefeicao.selectedIndex].value;
-    document.getElementById("periodoLink").href="/tickets?startDate=" + startDate + "&endDate=" + endDate + "&refeicaoID=" + refeicao;
+    // var refeicao = selectRefeicao.options[selectRefeicao.selectedIndex].value;
+    // document.getElementById("periodoLink").href="/tickets?startDate=" + startDate + "&endDate=" + endDate + "&refeicaoID=" + refeicao;
     
 };
 
 function getStringDate(d){
-    if(d.getMonth()<9){
-        var date = d.getFullYear()+'-0'+(d.getMonth()+1)+'-'+d.getDate();
-    }else{
-        var date = d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate();
-    }
-    return date;
+    var dataFormatada = d.getFullYear() + "-" + ("0" + (d.getMonth() + 1)).substr(-2) + "-" + ("0" + d.getDate()).substr(-2);
+    return dataFormatada;
 }
 
 function fastFilterToday(){
@@ -63,3 +59,7 @@ function fastFilterDaysBack(d){
     document.getElementById('endDateInput').value = getStringDate(today);
     onChangeFilters();
 }
+
+// $dates[$endDate->format('d/m/y')] = 0;
+// $fields[$endDate->format('d/m/y')] = $endDate->format('d/m/y');
+// $datesHas[$endDate->format('d/m/y')] = 0;

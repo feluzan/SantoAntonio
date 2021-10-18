@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 
 use Flash;
 use Response;
+use Image;
 
 use App\User;
 
@@ -78,14 +79,23 @@ class UserController extends AppBaseController
     public function update($id, UpdateUserRequest $request)
     {
         $user = $this->userRepository->find($id);
+        // dd($request->all());
+
+        if($request->hasFile('avatar')){
+            $avatar = $request->file('avatar');
+            $filename = $user->getUsername() . "_" . time() . ".jpg";
+            Image::make($avatar)->encode('jpg', 75)->save( public_path('uploads/avatars/' . $filename));
+        }
 
         if (empty($user)) {
             Flash::error('Usuário não encontrado.');
 
             return redirect(route('users.index'));
         }
+        $user->avatar = $filename;
+        $user->save();
 
-        $user = $this->userRepository->update($request->all(), $id);
+        $user = $this->userRepository->update(['avatar' => $filename], $id);
 
         Flash::success('Usuário atualizado com sucesso!');
 
