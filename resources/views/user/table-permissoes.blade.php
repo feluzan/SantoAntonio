@@ -12,6 +12,7 @@ $permissoes = array(
     9 => "Emitir tickets",
     10 => "Ver tickets emitidos",
     11 => "Ver resumo de uso diário (dashboard)",
+    12 => "Lançar tickets passados (casos emergenciais)",
 );
 
 @endphp
