@@ -46,6 +46,7 @@ class AuthServiceProvider extends ServiceProvider
          * 9 => "Emitir tickets"
          * 10 => "Ver tickets emitidos"
          * 11 => "Ver resumo de uso diário (dashboard)"
+         * 12 => "Lançar tickets passados (casos emergenciais)"
          * 
          */
 
@@ -113,9 +114,6 @@ class AuthServiceProvider extends ServiceProvider
             return $this->isAuthorized(10);
         });
 
-        
-
-
 
         // ---------------------- dashboard -------------------------------------
         //Usuarios que visualizam a tabela de resumo de uso diário
@@ -123,12 +121,16 @@ class AuthServiceProvider extends ServiceProvider
             return $this->isAuthorized(11);
         });
 
-        
-
 
         Gate::define('permissaoAcessos.create', function () {
             return Response::allow();
         });
+
+        Gate::define('tickets.lancamentopassado', function () {
+            return $this->isAuthorized(12);
+        });
+
+        
         
 
         

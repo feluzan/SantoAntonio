@@ -34,7 +34,7 @@ class HomeController extends Controller
         $refeicaos = Refeicao::all();
 
         foreach($refeicaos as $refeicao){
-            $ticketsToday = Ticket::where('refeicao_id',$refeicao->id)->whereDate('created_at', Carbon::today())->get();
+            $ticketsToday = Ticket::where('refeicao_id',$refeicao->id)->whereDate('data_refeicao', Carbon::today())->get();
             $auxilios = Auxilio::where('refeicao_id',$refeicao->id)->get();
             $data[$refeicao->nome] = [$ticketsToday,$auxilios, $refeicao];
         }

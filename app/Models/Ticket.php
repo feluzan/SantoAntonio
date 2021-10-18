@@ -30,6 +30,7 @@ class Ticket extends Model
         'assistido_id',
         'emissor_id',
         'valor',
+        'data_refeicao',
     ];
 
     /**
@@ -78,6 +79,11 @@ class Ticket extends Model
     public function getFormattedCreatedAtAttribute()
     {
         return $this->formatDate($this->created_at);
+    }
+
+    public function getFormattedDataRefeicaoAttribute()
+    {
+        return $this->formatDate($this->data_refeicao);
     }
 
     public function getFormattedValueAttribute(){
