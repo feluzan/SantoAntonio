@@ -16,7 +16,7 @@
                     <p>{{ Auth::user()->name}}</p>
                 @endif
                 <!-- Status -->
-                <a href="#"> {{ Auth::user()->getLevelDescription()}} </a>
+                <a href="#"> {{ Auth::user()->getUsername()}} </a>
             </div>
         </div>
 

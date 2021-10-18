@@ -6,7 +6,6 @@
                 <th >Ações</th>
                 <th >Nome</th>
                 <th> Usuário / Matrícula </th>
-                <th> Função </th>
                 <th> Data de Inclusão </th>
             </tr>
         </thead>
@@ -26,7 +25,6 @@
                 </td>
                 <td> {{ $u->getName() }} </td>
                 <td> {{ $u->getUsername() }} </td>
-                <td> {{ $u->getLevelDescription() }}
                 <td> {{ $u->getFormattedCreatedAtAttribute() }} </td>
             </tr>
         @endforeach
