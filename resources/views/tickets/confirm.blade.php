@@ -37,6 +37,7 @@
 
                             <div class="form-group col-sm-12">
                                 {!! Form::submit('Confirmar Ticket Virtual', ['class' => 'btn btn-success']) !!}
+                                <a href="{{ route('ticket.generate',['refeicao'=>$refeicao->id]) }}" class="btn btn-default">CANCELAR EMISSÃO DESSE TICKET</a>
                             </div>
 
                         {!! Form::close() !!}
