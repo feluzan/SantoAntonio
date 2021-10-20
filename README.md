@@ -14,9 +14,12 @@ Santo Antônio foi um Doutor da Igreja que viveu na viragem dos séculos XII e X
 
 Trecho da oração à Santo Antônio:
 
-```
-Santo Antônio, amigo dos pobres, peço-te a graça de nunca faltar pão e alimento em nossa mesa. Prometo-lhe, por minha vez, olhar sempre para os mais necessitados, repartindo com eles o pão que nos mandares, através do trabalho honesto.[...]
-```
+    Santo Antônio, amigo dos pobres,
+    peço-te a graça de nunca faltar pão e alimento em nossa mesa.
+    Prometo-lhe, por minha vez,
+    olhar sempre para os mais necessitados,
+    repartindo com eles o pão que nos mandares,
+    através do trabalho honesto.[...]
 
 
 <br><br>
