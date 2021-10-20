@@ -1,3 +1,23 @@
+# Informações sobre o sistema
+
+Esse sistema foi desenvolvido com a finalidade de controlar a utilização de auxílio estudantil e ainda está em constante evolução e adaptação.
+
+Atualmente está sendo testado e homologado no Ifes Campus Montanha.
+
+Dúvidas, críticas, sugestões ou perguntas devem ser enviadas para `felix.zanetti@ifes.edu.br`.
+
+<br><br>
+
+# O Santo Antônio
+
+Santo Antônio foi um Doutor da Igreja que viveu na viragem dos séculos XII e XIII. Foi canonizado em 30 de maio de 1232 pelo Papa Gregório IX. Sua festa liturica é celebrada em 13 de junho (data de seu óbito em 1231).
+
+Trecho da oração à Santo Antônio:
+
+    Santo Antônio, amigo dos pobres, peço-te a graça de nunca faltar pão e alimento em nossa mesa. Prometo-lhe, por minha vez, olhar sempre para os mais necessitados, repartindo com eles o pão que nos mandares, através do trabalho honesto.[...]
+
+
+<br><br>
 # Instruções para Instaçação
 
 ## Pré-requisitos
@@ -51,3 +71,10 @@
 ## Iniciando o sistema
 
 Inicie o servidor do laravel com o comando `php artisan serve`
+
+<br>
+<br>
+
+
+
+
