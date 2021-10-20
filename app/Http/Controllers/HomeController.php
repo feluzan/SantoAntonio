@@ -9,6 +9,8 @@ use App\Models\Refeicao;
 use App\Models\Ticket;
 use App\Models\Auxilio;
 use Carbon\Carbon;
+use Chartjs;
+use DB;
 
 class HomeController extends Controller
 {
@@ -31,14 +33,93 @@ class HomeController extends Controller
     {
         $data = [];
 
-        $refeicaos = Refeicao::all();
+        $refeicaos = Refeicao::where('habilitada',1)->get();
+
+        $charts = [];
+
+        $startDate = Carbon::today()->subDays(7);
+        $endDate = Carbon::today();
 
         foreach($refeicaos as $refeicao){
             $ticketsToday = Ticket::where('refeicao_id',$refeicao->id)->whereDate('data_refeicao', Carbon::today())->get();
             $auxilios = Auxilio::where('refeicao_id',$refeicao->id)->get();
             $data[$refeicao->nome] = [$ticketsToday,$auxilios, $refeicao];
+
+
+            $ticketsWeek = DB::table('tickets')
+                            ->selectRaw('count(id) as quantidade_total, date(data_refeicao) dateOnly, sum(valor) valor_total')
+                            ->groupBy('dateOnly')
+                            ->whereBetween(DB::raw('date(data_refeicao)'), [$startDate, $endDate])
+                            ->orderBy('dateOnly','ASC')
+                            ->get();
+            
+
+            // dd($ticketsWeek, $startDate, $endDate);
+
+            $dayChart =  app()->chartjs
+                        ->name(str_replace(" ","_",$refeicao->nome))
+                        ->type('pie')
+                        ->size(['width' => 400, 'height' => 200])
+                        ->labels(['Tickets gerados', 'Auxílios não utilizados'])
+                        ->datasets([
+                            [
+                                'backgroundColor' => ['#FF6384', '#36A2EB'],
+                                'hoverBackgroundColor' => ['#FF6384', '#36A2EB'],
+                                'data' => [count($ticketsToday), count($auxilios)-count($ticketsToday)],
+                            ]
+                        ])
+                        ->optionsRaw([
+                                'plugins' => [
+                                  'title' => [
+                                    'display' => true,
+                                    'text' => 'Hoje',
+                                  ]
+                                ]
+                        ])
+                        ->options([]);
+
+            $weekLabels = [];
+            $weekValues = [];
+            foreach($ticketsWeek as $ticket){
+                // dd($ticket);
+                $weekLabels[] = date('d-m-Y', strtotime($ticket->dateOnly));
+                $weekValues[] = $ticket->quantidade_total;
+            }
+            // $week
+            
+            $weekChart = app()->chartjs
+                        ->name('lineChartTest')
+                        ->type('line')
+                        ->size(['width' => 400, 'height' => 200])
+                        ->labels($weekLabels)
+                        ->datasets([
+                            [
+                                "label" => "Tickets emitidos",
+                                'backgroundColor' => "rgba(38, 185, 154, 0.31)",
+                                'borderColor' => "rgba(38, 185, 154, 0.7)",
+                                "pointBorderColor" => "rgba(38, 185, 154, 0.7)",
+                                "pointBackgroundColor" => "rgba(38, 185, 154, 0.7)",
+                                "pointHoverBackgroundColor" => "#fff",
+                                "pointHoverBorderColor" => "rgba(220,220,220,1)",
+                                'data' => $weekValues,
+                            ],
+                        ])
+                        ->optionsRaw([
+                            'plugins' => [
+                              'title' => [
+                                'display' => true,
+                                'text' => 'Últimos 7 dias',
+                              ]
+                            ]
+                        ])
+                        ->options([]);
+
+            $charts[$refeicao->nome] = [
+                'dayChart' => $dayChart,
+                'weekChart' => $weekChart,
+            ];
         }
         
-        return view('home.home',compact('data'));
+        return view('home.home',compact('data', 'charts'));
     }
 }
