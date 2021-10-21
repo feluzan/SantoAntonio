@@ -24,10 +24,10 @@ function onChangeFilters(){
     // alert('opa');
     var startDate = document.getElementById('startDateInput').value;
     var endDate = document.getElementById('endDateInput').value;
-    // var selectRefeicao = document.getElementById('selectRefeicaoInput');
+    var selectRefeicao = document.getElementById('selectRefeicaoInput');
 
-    // var refeicao = selectRefeicao.options[selectRefeicao.selectedIndex].value;
-    // document.getElementById("periodoLink").href="/tickets?startDate=" + startDate + "&endDate=" + endDate + "&refeicaoID=" + refeicao;
+    var refeicao = selectRefeicao.options[selectRefeicao.selectedIndex].value;
+    document.getElementById("periodoLink").href="/tickets?startDate=" + startDate + "&endDate=" + endDate + "&refeicaoID=" + refeicao;
     
 };
 

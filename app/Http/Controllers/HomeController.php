@@ -45,19 +45,16 @@ class HomeController extends Controller
             $auxilios = Auxilio::where('refeicao_id',$refeicao->id)->get();
             $data[$refeicao->nome] = [$ticketsToday,$auxilios, $refeicao];
 
-
             $ticketsWeek = DB::table('tickets')
                             ->selectRaw('count(id) as quantidade_total, date(data_refeicao) dateOnly, sum(valor) valor_total')
                             ->groupBy('dateOnly')
                             ->whereBetween(DB::raw('date(data_refeicao)'), [$startDate, $endDate])
+                            ->where('refeicao_id',$refeicao->id)
                             ->orderBy('dateOnly','ASC')
                             ->get();
-            
-
-            // dd($ticketsWeek, $startDate, $endDate);
 
             $dayChart =  app()->chartjs
-                        ->name(str_replace(" ","_",$refeicao->nome))
+                        ->name("dayChart_refeicao_" . $refeicao->id)
                         ->type('pie')
                         ->size(['width' => 400, 'height' => 200])
                         ->labels(['Tickets gerados', 'Auxílios não utilizados'])
@@ -78,17 +75,17 @@ class HomeController extends Controller
                         ])
                         ->options([]);
 
-            $weekLabels = [];
+            
+                        $weekLabels = [];
             $weekValues = [];
+
             foreach($ticketsWeek as $ticket){
-                // dd($ticket);
                 $weekLabels[] = date('d-m-Y', strtotime($ticket->dateOnly));
                 $weekValues[] = $ticket->quantidade_total;
             }
-            // $week
-            
+        
             $weekChart = app()->chartjs
-                        ->name('lineChartTest')
+                        ->name("weekChart_refeicao_" . $refeicao->id)
                         ->type('line')
                         ->size(['width' => 400, 'height' => 200])
                         ->labels($weekLabels)

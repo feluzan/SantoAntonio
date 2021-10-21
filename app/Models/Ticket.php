@@ -21,7 +21,7 @@ class Ticket extends Model
     public $table = 'tickets';
     
 
-    protected $dates = ['deleted_at'];
+    protected $dates = ['deleted_at','data_refeicao'];
 
 
 
