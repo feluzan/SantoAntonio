@@ -147,6 +147,15 @@
                 background-color: #cccccc;
             }
 
+            tr.soma-geral{
+                font-weight: bold;
+            }
+
+            .table100.ver1 tr.soma-geral td{
+                color: #000;
+                background-color: #6c7ae0;
+            }
+
             @media print {
                 body {
                     margin: 0;
@@ -223,7 +232,7 @@
 
                                 <tbody>
                                     @foreach($items as $item)
-                                        <tr class="row100 body">
+                                        <tr class="row100 body {{ isset($item->rowExtraClass) ? $item->rowExtraClass : '' }}">
                                             @php
                                                 $contador = 1;
                                             @endphp

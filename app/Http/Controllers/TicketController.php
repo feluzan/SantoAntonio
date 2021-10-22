@@ -247,7 +247,10 @@ class TicketController extends AppBaseController
 
         $items = [];
 
-        $users = User::has('ticket', '>', 0)->get();
+        $users = User::has('ticket', '>', 0)->orderBy('name','ASC')->get();
+        $totalGlobal = 0;
+
+        $totalByDay = $dates;
 
         foreach($users as $u){
             $aux = $dates;
@@ -257,11 +260,20 @@ class TicketController extends AppBaseController
             $tickets = Ticket::where('assistido_id',$u->id)->whereBetween(DB::raw('date(data_refeicao)'), [$startDate, $endDate])->get();
             foreach($tickets as $t){
                 $aux[$t->data_refeicao->format('d/m/y')]+= $t->valor;
+                $totalByDay[$t->data_refeicao->format('d/m/y')]+= $t->valor;
                 $datesHas[$t->data_refeicao->format('d/m/y')]+=1;
                 $aux['total'] += $t->valor;
+                
             }
             $items[] = (object)$aux;
+            $totalGlobal += $aux['total'];
         }
+
+        $totalByDay['nome'] = "Total Diário";
+        $totalByDay['total'] = $totalGlobal;
+        $totalByDay['assinatura'] = "";
+        $totalByDay['rowExtraClass'] = "soma-geral";
+        $items[] = (object)$totalByDay;
 
 
         $fields['total'] = 'Total';
@@ -284,9 +296,9 @@ class TicketController extends AppBaseController
         $extraStyle=[];
         $extraStyle['td'] = "font-size:10px;text-align:center;";
         $extraStyle['th']="white-space: nowrap;font-size:10px;";
-        // return view('layouts.tableLandscapePDF',compact('items','fields','metaData','extraStyle'));
-        $pdf = PDF::loadView('layouts.tableLandscapePDF',compact('items','fields','metaData','extraStyle'))->setPaper('a4', 'landscape');
-        return $pdf->download('[SA]Sumário de Valores ' . date('dmyHis') . '.pdf');
+        return view('layouts.tableLandscapePDF',compact('items','fields','metaData','extraStyle','totalGlobal'));
+        // $pdf = PDF::loadView('layouts.tableLandscapePDF',compact('items','fields','metaData','extraStyle','totalGlobal'))->setPaper('a4', 'landscape');
+        // return $pdf->download('[SA]Sumário de Valores ' . date('dmyHis') . '.pdf');
 
     }
 

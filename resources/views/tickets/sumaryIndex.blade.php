@@ -14,6 +14,20 @@
         <div class="clearfix"></div>
         <div class="box box-primary">
             <div class="box-body">
+                <h4 class="pull-left">Informações sobre esse relatório</h4>
+                <div class="row">
+                    <div class="col-xs-12">
+                        <p>
+                            Exibe uma lista com o nome de todos os usuários que consumiram pelo menos uma refeição dentro do período solicitado. Cada coluna representa o valor total em tickets de cada usuário em um determinado dia.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="clearfix"></div>
+        <div class="box box-primary">
+            <div class="box-body">
             <h4 class="pull-left">Filtros do Sumário</h4>
                 <div class="row">
                     <div class="col-xs-12">

@@ -46,13 +46,22 @@ Trecho da oração à Santo Antônio:
     - `DB_PASSWORD`
 
 - Rode os comandos a seguir
-    - `composer update`
-    - `composer global require "laravel/installer=~1.1"`
-    - `composer install`
-    - `php artisan key:generate`
-    - `php artisan migrate:install`
-    - `php artisan migrate`
-    - `php artisan vendor:publish`
+    ```
+    $ composer update
+
+    $ composer global require "laravel/installer"
+
+    $ composer install
+
+    $ php artisan key:generate
+
+    $ php artisan migrate:install
+
+    $ php artisan migrate
+
+    $ php artisan vendor:publish
+
+    ```
 
 - Acesse o arquivo `\config\ldap.php` e certifique-se de configurar corretamente os seguintes parâmetros do array `connections->default->settings`:
     - `account_prefix` : `''`
@@ -71,11 +80,51 @@ Trecho da oração à Santo Antônio:
     - `passwords->sync` : `true`
     - `passwords->column` : `password`
 
+<br><br>
+## Etapas adicionais para web servers
+
+- Ceder propriedade dos arquivos do projeto para o usuário que roda o php
+
+    ```
+    ### Debian/Ubuntu
+    $ sudo chown -R www-data /path/to/laravel/files
+
+    ### CentOS/RedHat/Fedora
+    $ sudo chown -R apache /path/to/laravel/files
+    ```
+
+- Ceder permissão de escrita em diretórios:
+    ```
+    # Group Writable (Group, User Writable)
+    $ sudo chmod -R gu+w storage
+
+    # World-writable (Group, User, Other Writable)
+    $ sudo chmod -R guo+w storage
+
+    #####
+    # The bootstrap/cache directory may need writing to also
+    ##
+
+    # Group Writable (Group, User Writable)
+    $ sudo chmod -R gu+w bootstrap/cache
+
+    # World-writable (Group, User, Other Writable)
+    $ sudo chmod -R guo+w bootstrap/cache
+    ```
+
+- Ceder todas as permissões recursivamente na pasta `public/uploads`
+    ```
+    $ chmod 777 ./uploads/*
+    ```
 
 
-## Iniciando o sistema
+<br><br>
+## Iniciando o sistema localmente
 
-Inicie o servidor do laravel com o comando `php artisan serve`
+- Inicie o servidor do laravel 
+    ```
+    $ php artisan serve
+    ```    
 
 <br>
 <br>
