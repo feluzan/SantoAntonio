@@ -11,6 +11,7 @@ use App\Models\Auxilio;
 use Carbon\Carbon;
 use Chartjs;
 use DB;
+use Illuminate\Support\Facades\Auth;
 
 class HomeController extends Controller
 {
@@ -121,7 +122,7 @@ class HomeController extends Controller
                 'weekChart' => $weekChart,
             ];
         }
-        
+        activity("View")->causedBy(Auth::user())->log('Exibindo dashboard.');
         return view('home.home',compact('data', 'charts'));
     }
 }

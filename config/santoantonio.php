@@ -23,7 +23,30 @@ return [
     |
     | Registro da versão atual do Sistema.
     */
-    'current_version' => "v0.2",
+    'current_version' => "v0.3",
+
+    /*
+    |--------------------------------------------------------------------------
+    | CONTROLE DE ALTERAÇÕES
+    |--------------------------------------------------------------------------
+    |
+    | Registro de alterações de acordo com as versões
+    */
+
+    'change_log' => [
+        'v0.1' => [
+            "Versão inicial do sistema.",
+            "Funcionalidades básicas adicionadas",
+        ],
+        'v0.2' => [
+            "Aprimoramento do controle de permissão",
+            "Adicionada a funcionalidade de lançar tickets em dias anteriores"
+        ],
+        'v0.3' => [
+            "Inclusão de change log.",
+            "Criação do arquivo de configuração santoantonio.php",
+        ]
+        ],
 
 
     /*
