@@ -28,14 +28,14 @@ $permissoes = array(
             </tr>
         </thead>
         <tbody>
-            @foreach($permissoes as $pKey => $pDesc)
+            @foreach(config('santoantonio.access_permission') as $aKey => $aValue)
                 <tr>
-                    <td>{{ $pDesc }}</td>
+                    <td>{{ $aValue['desc'] }}</td>
                     @php
                         $has = false
                     @endphp
                     @foreach($user->permissaoAcesso as $userPermissao)
-                        @if($pKey == $userPermissao->codigo)
+                        @if($aValue['code'] == $userPermissao->codigo)
                         @php
                             $has = true
                         @endphp
@@ -59,7 +59,7 @@ $permissoes = array(
                             {!! Form::open(['route' => 'permissaoAcessos.store']) !!}
 
                             {!! Form::hidden('user_id', $user->id) !!}
-                            {!! Form::hidden('codigo', $pKey) !!}
+                            {!! Form::hidden('codigo', $aValue['code']) !!}
                             {!! Form::button('<i class="glyphicon glyphicon-plus"></i>', ['type' => 'submit', 'class' => 'btn btn-success btn-xs', 'title' => "Habilitar essa permissão"]) !!}
                             {!! Form::close() !!}
                             </div>

@@ -28,7 +28,7 @@ Trecho da oração à Santo Antônio:
 ## Pré-requisitos
 
 - PHP
-    - Habilitar `extension: ldap` no arquivo php.ini)
+    - Habilitar `extension: ldap` no arquivo php.ini
 - MySQL
 - [Composer](https://getcomposer.org/download/)
 
@@ -80,6 +80,20 @@ Trecho da oração à Santo Antônio:
     - `passwords->sync` : `true`
     - `passwords->column` : `password`
 
+
+<br><br>
+## Alteração de permissão
+
+O sistema conta com uma gerência individual de permissão de funções, isto é, tudo que um usuário pode fazer dentro do sistema deve ser indicado de forma explícita dentro da configuração do usuário. Por isso, todas as permissões de funções são iniciadas com o status DESABILITADO para os usuários.
+
+Para que seja possível iniciar as habilitações das funções, é necessário indicar um usuário master. É indicado que esse usuário seja uma pessoa que tenha amplo conhecimento de TODAS as funções do sistema pois ele terá todos os acessos liberados.
+
+Para indicar o usuário master:
+- Acesse o arquivo `.env`
+- Edite a linha `MASTER_USER = "2157933"` para que contenha a matrícula SIAPE do usuário master.
+
+Após atribuir as funções "Alterar permissões de acesso dos usuários", "Ver os usuários do sistema" e "Editar os usuários do sistema" para alguém, o parâmetro `MASTER_USER` pode ser permanentemente deletado.
+
 <br><br>
 ## Etapas adicionais para web servers
 
@@ -129,6 +143,12 @@ Trecho da oração à Santo Antônio:
 <br>
 <br>
 
+
+# Registro de Versões
+
+- v0.1
+    
+    Versão inicial para homologação das funções do sistema.
 
 
 
