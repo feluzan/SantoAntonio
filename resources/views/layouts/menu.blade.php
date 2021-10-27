@@ -41,3 +41,7 @@
     </li>
 
 @endcan
+<li class="{{ Request::is('turmas*') ? 'active' : '' }}">
+    <a href="{{ route('turmas.index') }}"><i class="fa fa-edit"></i><span>Turmas</span></a>
+</li>
+

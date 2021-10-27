@@ -80,6 +80,14 @@ class User extends Authenticatable
         return $this->hasMany('App\Models\PermissaoAcesso','user_id');
     }
 
+    /**
+     * The user assistido associated with ticket
+     */
+    public function turma()
+    {
+        return $this->belongsTo('App\Models\Turma');
+    }
+
     public function getFormattedCreatedAtAttribute()
     {
         return $this->formatDate($this->created_at);

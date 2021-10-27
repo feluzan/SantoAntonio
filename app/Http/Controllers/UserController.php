@@ -12,6 +12,7 @@ use Response;
 use Image;
 
 use App\User;
+use App\Models\Turma;
 
 class UserController extends AppBaseController
 {
@@ -65,7 +66,10 @@ class UserController extends AppBaseController
             return redirect(route('users.index'));
         }
 
-        return view('user.edit')->with('user', $user);
+        $turmas = Turma::all()->pluck('nome','id')->toArray();
+        // dd($turmas);
+
+        return view('user.edit',compact('turmas'))->with('user', $user);
     }
 
     /**
@@ -85,6 +89,7 @@ class UserController extends AppBaseController
             $avatar = $request->file('avatar');
             $filename = $user->getUsername() . "_" . time() . ".jpg";
             Image::make($avatar)->encode('jpg', 75)->save( public_path('uploads/avatars/' . $filename));
+            $user = $this->userRepository->update(['avatar' => $filename], $id);
         }
 
         if (empty($user)) {
@@ -92,10 +97,7 @@ class UserController extends AppBaseController
 
             return redirect(route('users.index'));
         }
-        $user->avatar = $filename;
         $user->save();
-
-        $user = $this->userRepository->update(['avatar' => $filename], $id);
 
         Flash::success('Usuário atualizado com sucesso!');
 

@@ -41,7 +41,6 @@ Route::get('/home', 'HomeController@index')->name('home')->middleware('verified'
 
 Route::group(['middleware' => 'auth'], function () {
 
-
     /* ------------- ROTAS USER -----------------------------
     /* - Listar usuarios (index)
     /* - Editar usuario (edit/update)
@@ -109,19 +108,9 @@ Route::group(['middleware' => 'auth'], function () {
     /* ------------- ROTAS PERMISSAO ACESSO -----------------------------
     /* 
     /* ---------------------------------------------------------*/
-    Route::group(['middleware'=>'can:permissaoAcesso.create'], function () {
-        // Route::get('/permissaoAcessos/{user}/create', 'PermissaoAcessoController@generate')->name('permissaoAcessos.generate');
-        
-        
-    });
     Route::get('/permissaoAcesso', 'PermissaoAcessoController@index')->name('permissaoAcessos.index');
     Route::post('/permissaoAcessos','PermissaoAcessoController@store')->name('permissaoAcessos.store')->middleware('can:permissaoAcesso.manage');
     Route::delete('/permissaoAcessos/{permissaoAcesso}', 'PermissaoAcessoController@destroy')->name('permissaoAcessos.destroy')->middleware('can:permissaoAcesso.manage');
 });
 
-
-
-
-
-
-// Route::resource('permissaoAcessos', 'PermissaoAcessoController');
+Route::resource('turmas', 'TurmaController');

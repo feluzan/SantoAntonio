@@ -45,8 +45,9 @@ return [
         'v0.3' => [
             "Inclusão de change log.",
             "Criação do arquivo de configuração santoantonio.php",
-        ]
+            "Criação de TURMA"
         ],
+    ],
 
 
     /*
@@ -116,20 +117,20 @@ return [
         ],
 
     ],
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | PERÍODOS DOS CURSOS
+    |--------------------------------------------------------------------------
+    | Referem-se aos períodos disponíveis para cadastro de turmas
+    | Matutino / Vespertino / Noturno / Integral
+    */
+    'periodo' => [
+        "MATUTINO" => "MATUTINO",
+        "VESPERTINO" => "VESPERTINO",
+        "NOTURNO" => "NOTURNO",
+        "INTEGRAL" => "INTEGRAL",
+    ],
 ];
 
-
-/* 1 => "Alterar permissões de acesso dos usuários"
-* 2 => "Ver os usuários do sistema"
-* 3 => "Editar os usuários do sistema"
-* 4 => "Ver as refeições cadastradas"
-* 5 => "Criar e editar as refeições"
-* 6 => "Ver os auxílios cadastrados"
-* 7 => "Conceder auxílios aos usuários"
-* 8 => "Gerar relatórios de auxílios"
-* 9 => "Emitir tickets"
-* 10 => "Ver tickets emitidos"
-* 11 => "Ver resumo de uso diário (dashboard)"
-* 12 => "Lançar tickets passados (casos emergenciais)"
-         * 
-    * */
