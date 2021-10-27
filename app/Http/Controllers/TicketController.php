@@ -52,9 +52,14 @@ class TicketController extends AppBaseController
         $input = $request->all();
 
         $assistido = User::where('username',$input['username'])->first();
+        // verifica se o usuário existe
+        if($assistido == null){
+            Flash::error('Ticket Virtual não gerado. ' . $input['username'] . ' não existe no sistema. ');
+            return redirect(route('ticket.generate',[$input['refeicao_id']]));
+        }
+
         $refeicao = Refeicao::find($input['refeicao_id']);
         
-
         //verifica se o $assistido possui o auxilio para a $refeicao
         $auxilio = Auxilio::where('user_id',$assistido->id)->where('refeicao_id',$refeicao->id)->first();
         if($auxilio==null){
@@ -70,7 +75,7 @@ class TicketController extends AppBaseController
         }
 
         $input['assistido_id']=$assistido->id;
-        $input['data_refeicao'] = Carbon::now("Y-m-d h:i:s");
+        $input['data_refeicao'] = Carbon::now()->format("Y-m-d h:i:s");
         $ticket = $this->ticketRepository->create($input);
         Flash::success('Ticket Virtual para  ' . $assistido->name . ' gerado com sucesso.');
 
@@ -81,6 +86,11 @@ class TicketController extends AppBaseController
         $input = $request->all();
 
         $assistido = User::where('username',$input['username'])->first();
+        // verifica se o usuário existe
+        if($assistido == null){
+            Flash::error('Ticket Virtual não gerado. ' . $input['username'] . ' não existe no sistema. ');
+            return redirect(route('ticket.generate',[$input['refeicao_id']]));
+        }
         $refeicao = Refeicao::find($input['refeicao_id']);
         
         //verifica se o $assistido possui o auxilio para a $refeicao
