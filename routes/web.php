@@ -101,6 +101,8 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/tickets/sumario', 'TicketController@sumaryIndex')->name('tickets.sumaryIndex')->middleware('can:tickets.report');
     Route::post('/tickets/sumario/report','TicketController@sumaryBuild')->name('tickets.sumaryBuild')->middleware('can:tickets.report');;
 
+    // Route::get('/relatorio/sumario', 'TicketController@')
+
     Route::get('/tickets/lancamentopassado', 'TicketController@lancamentoPassado')->name('tickets.lancamentopassado')->middleware('can:tickets.lancamentopassado');
     Route::post('/tickets/lancamentopassado', 'TicketController@pastStore')->name('tickets.pastStore')->middleware('can:tickets.lancamentopassado');
 

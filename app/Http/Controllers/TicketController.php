@@ -8,6 +8,8 @@ use App\Repositories\TicketRepository;
 use App\Http\Controllers\AppBaseController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Repositories\RefeicaoRepository;
+use App\Repositories\TurmaRepository;
 use Flash;
 use Response;
 use Carbon\Carbon;
@@ -25,9 +27,17 @@ class TicketController extends AppBaseController
     /** @var  TicketRepository */
     private $ticketRepository;
 
-    public function __construct(TicketRepository $ticketRepo)
+    /** @var  RefeicaoRepository */
+    private $refeicaoRepository;
+
+    /** @var  TurmaRepository */
+    private $turmaRepository;
+
+    public function __construct(TicketRepository $ticketRepo, RefeicaoRepository $refeicaoRepo, TurmaRepository $turmaRepo)
     {
         $this->ticketRepository = $ticketRepo;
+        $this->refeicaoRepository = $refeicaoRepo;
+        $this->turmaRepository = $turmaRepo;
     }
 
     /**
@@ -188,46 +198,20 @@ class TicketController extends AppBaseController
         $startDate = $request->input('startDate') ? Carbon::create($request->input('startDate')) : Carbon::today()->subDays(30);
         $endDate = $request->input('endDate') ? Carbon::create($request->input('endDate')) : Carbon::today();
 
-        $dates = [];
-        $looper = $request->input('startDate') ? Carbon::create($request->input('startDate')) : Carbon::today()->subDays(30);
-        $fields =[];
-        $fields['nome'] = 'Assistido';
-        // dd($diff);
-        while($looper->diffInDays($endDate)>0){
-            $dates[$looper->format('d/m/y')] = 0;
-            $fields[$looper->format('d/m/y')] = $looper->format('d/m/y');
-            
-            $looper = $looper->addDay();
-        }
-        $dates[$endDate->format('d/m/y')] = 0;
-        $fields[$endDate->format('d/m/y')] = $endDate->format('d/m/y');
+        $refeicoes = $this->refeicaoRepository->all();
+        $turmas = $this->turmaRepository->all();
 
-
-        $items = [];
-
-        $users = User::has('ticket', '>', 0)->get();
-
-        foreach($users as $u){
-            $aux = $dates;
-            $aux['nome'] = $u->name;
-            $aux['assinatura'] = "________________________________";
-            $tickets = Ticket::where('assistido_id',$u->id)->whereBetween(DB::raw('date(data_refeicao)'), [$startDate, $endDate])->get();
-            foreach($tickets as $t){
-                $aux[$t->data_refeicao->format('d/m/y')]+= $t->valor;
-            }
-            $items[] = (object)$aux;
-        }
-
-        $fields['assinatura'] = 'Assinatura';
        
 
-        return view('tickets.sumaryIndex',compact('startDate','endDate', 'items','fields'));
+        return view('relatorios.sumarizacao',compact('startDate','endDate', 'refeicoes', 'turmas'));
 
     }
 
     public function sumaryBuild(Request $request){
-        $startDate = $request->input('startDate') ? Carbon::create($request->input('startDate')) : Carbon::today()->subDays(30);
-        $endDate = $request->input('endDate') ? Carbon::create($request->input('endDate')) : Carbon::today();
+        $startDate = $request->input('startDate');
+        $endDate = $request->input('endDate');
+
+        dd($request->all());
 
         $dates = [];
         $datesHas = [];
