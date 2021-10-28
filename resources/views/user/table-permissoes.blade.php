@@ -1,22 +1,5 @@
 @php
 
-$permissoes = array(
-    1 => "Alterar permissões de acesso dos usuários",
-    2 => "Ver os usuários do sistema",
-    3 => "Editar os usuários do sistema",
-    4 => "Ver as refeições cadastradas",
-    5 => "Criar e editar as refeições",
-    6 => "Ver os auxílios cadastrados",
-    7 => "Conceder auxílios aos usuários",
-    8 => "Gerar relatórios de auxílios",
-    9 => "Emitir tickets",
-    10 => "Ver tickets emitidos",
-    11 => "Ver resumo de uso diário (dashboard)",
-    12 => "Lançar tickets passados (casos emergenciais)",
-);
-
-@endphp
-
 <div class="table-responsive">
     <table class="table" id="user-table">
         <thead>

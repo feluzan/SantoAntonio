@@ -156,4 +156,10 @@ class TurmaController extends AppBaseController
 
         return redirect(route('turmas.index'));
     }
+
+    public function listUsers($id){
+        $turma = $this->turmaRepository->find($id);
+        $membros = $turma->user()->get();
+        return view('user.index')->with('user', $membros);
+    }
 }

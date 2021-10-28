@@ -31,22 +31,35 @@ class UserController extends AppBaseController
      *
      * @return Response
      */
-    public function index(Request $request)
-    {
+    public function index(Request $request){
         $input = $request->all();
         if(isset($input['search'])){
             $searchTerm = $input['search'];
-            $user = User::query()
-                        ->where('name', 'LIKE', "%{$searchTerm}%") 
-                        ->orWhere('username', 'LIKE', "%{$searchTerm}%") 
-                        ->get();
-
+            $user = $this->userRepository->allNotArchived([
+                'name' => ['operator'=> 'like', 'value' => '%' . $searchTerm . '%', 'boolean' => 'or'],
+                'username' => ['operator'=> 'like', 'value' => '%' . $searchTerm . '%', 'boolean' => 'or'],
+            ]);
         }else{
-            $user = $this->userRepository->all();
+            $user = $this->userRepository->allNotArchived();
         }
 
-        return view('user.index')
-            ->with('user', $user);
+        return view('user.index')->with('user', $user);
+    }
+
+    public function archivedIndex(Request $request){
+        $input = $request->all();
+        if(isset($input['search'])){
+            $searchTerm = $input['search'];
+            $user = $this->userRepository->allArchived([
+                'name' => ['operator'=> 'like', 'value' => '%' . $searchTerm . '%', 'boolean' => 'or'],
+                'username' => ['operator'=> 'like', 'value' => '%' . $searchTerm . '%', 'boolean' => 'or'],
+            ]);
+
+        }else{
+            $user = $this->userRepository->allArchived();
+        }
+
+        return view('user.index')->with('user', $user);
     }
 
     /**
@@ -65,9 +78,10 @@ class UserController extends AppBaseController
 
             return redirect(route('users.index'));
         }
-
-        $turmas = Turma::all()->pluck('nome','id')->toArray();
-        // dd($turmas);
+        
+        $turmas = Turma::orderBy('nome')->pluck('nome','id')->toArray();
+        $turmas[0] = "Sem turma";
+        
 
         return view('user.edit',compact('turmas'))->with('user', $user);
     }
@@ -82,14 +96,14 @@ class UserController extends AppBaseController
      */
     public function update($id, UpdateUserRequest $request)
     {
+        $input = $request->all();
         $user = $this->userRepository->find($id);
-        // dd($request->all());
 
         if($request->hasFile('avatar')){
             $avatar = $request->file('avatar');
             $filename = $user->getUsername() . "_" . time() . ".jpg";
             Image::make($avatar)->encode('jpg', 75)->save( public_path('uploads/avatars/' . $filename));
-            $user = $this->userRepository->update(['avatar' => $filename], $id);
+            $user['avatar'] = $filename;
         }
 
         if (empty($user)) {
@@ -97,10 +111,21 @@ class UserController extends AppBaseController
 
             return redirect(route('users.index'));
         }
+        
+        $user['turma_id'] = $input['turma_id'];
         $user->save();
 
         Flash::success('Usuário atualizado com sucesso!');
 
         return redirect(route('users.index'));
+    }
+
+    public function updateArchive($user_id, UpdateUserRequest $request){
+        $input = $request->all();
+        $user = $this->userRepository->find($user_id);
+        $archive = $input['arquivado'];
+        $user['arquivado'] = $archive;
+        $user->save();
+        return redirect()->back();
     }
 }

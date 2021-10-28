@@ -114,6 +114,17 @@ class AuthServiceProvider extends ServiceProvider
             return $this->isAuthorized(config('santoantonio.access_permission.create_past_tickets.code'));
         });
 
+
+        //Ver turmas
+        Gate::define('turmas.list', function () {
+            return $this->isAuthorized(config('santoantonio.access_permission.show_turmas.code'));
+        });
+
+        //Ver usuários arquivados
+        Gate::define('users.editararquivados', function () {
+            return $this->isAuthorized(config('santoantonio.access_permission.editar_arquivados.code'));
+        });
+
         
         
 

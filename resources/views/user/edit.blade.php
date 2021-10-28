@@ -39,7 +39,7 @@
 
                     <div class="col-xs-12" style="margin-top:30px">
                         {!! Form::label('', 'Turma:') !!}
-                        {!! Form::select('turma', $turmas, $user->turma) !!}
+                        {!! Form::select('turma_id', $turmas, $user->turma ? $user->turma : 0) !!}
                     </div>
 
                     <div class="col-xs-12" style="margin-top:30px">

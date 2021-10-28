@@ -116,6 +116,17 @@ return [
             'desc' => "Lançar tickets passados (casos emergenciais)"
         ],
 
+        'show_turmas' => [
+            'code' => 13,
+            'desc' => "Visualizar turmas cadastradas",
+        ],
+
+        'editar_arquivados' => [
+            'code' => 14,
+            'desc' => "Listar e editar usuários arquivados",
+
+        ],
+
     ],
 
 

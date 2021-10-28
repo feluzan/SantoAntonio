@@ -4,7 +4,6 @@ namespace App\Models;
 
 use Eloquent as Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-
 /**
  * Class Turma
  * @package App\Models
@@ -51,7 +50,7 @@ class Turma extends Model
 
     public function user()
     {
-        return $this->hasMany('App\Users');
+        return $this->hasMany('App\User');
     }
 
     
