@@ -41,7 +41,13 @@
     </li>
 
 @endcan
+@can('users.editararquivados')
+    <li class="{{ Route::is('users.archiveIndex') ? 'active' : '' }}">
+        <a href="{{ route('users.archiveIndex') }}"><i class="fa fa-user-times"></i><span> Ver usuários arquivados</span></a>
+    </li>
+
+@endcan
 <li class="{{ Request::is('turmas*') ? 'active' : '' }}">
-    <a href="{{ route('turmas.index') }}"><i class="fa fa-edit"></i><span>Turmas</span></a>
+    <a href="{{ route('turmas.index') }}"><i class="fa fa-users"></i><span>Turmas</span></a>
 </li>
 
