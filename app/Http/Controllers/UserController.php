@@ -13,6 +13,8 @@ use Image;
 
 use App\User;
 use App\Models\Turma;
+use App\Models\Auxilio;
+use Illuminate\Support\Facades\Auth;
 
 class UserController extends AppBaseController
 {
@@ -124,8 +126,14 @@ class UserController extends AppBaseController
         $input = $request->all();
         $user = $this->userRepository->find($user_id);
         $archive = $input['arquivado'];
+
+        // Caso vá arquivar o usuário, retirar todos os auxílios que ele possui
+        if($archive){
+            Auxilio::where('user_id',$user_id)->delete();
+        }
         $user['arquivado'] = $archive;
         $user->save();
+        activity("User")->causedBy(Auth::user())->performedOn($user)->log("Arquivando usuário e removendo todos os auxílios.");
         return redirect()->back();
     }
 }
