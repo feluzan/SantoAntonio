@@ -1,4 +1,3 @@
-@php
 
 <div class="table-responsive">
     <table class="table" id="user-table">
