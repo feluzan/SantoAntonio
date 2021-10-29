@@ -34,50 +34,34 @@ class AuthServiceProvider extends ServiceProvider
          * O controle de acesso é criado de forma estática,
          * porém é atribuído de forma dinâmica.
          * 
-         * 
-         * 1 => "Alterar permissões de acesso dos usuários"
-         * 2 => "Ver os usuários do sistema"
-         * 3 => "Editar os usuários do sistema"
-         * 4 => "Ver as refeições cadastradas"
-         * 5 => "Criar e editar as refeições"
-         * 6 => "Ver os auxílios cadastrados"
-         * 7 => "Conceder auxílios aos usuários"
-         * 8 => "Gerar relatórios de auxílios"
-         * 9 => "Emitir tickets"
-         * 10 => "Ver tickets emitidos"
-         * 11 => "Ver resumo de uso diário (dashboard)"
-         * 12 => "Lançar tickets passados (casos emergenciais)"
-         * 
          */
 
         Gate::define('permissaoAcesso.manage', function () {
-            return $this->isAuthorized(1);
+            return $this->isAuthorized(config('santoantonio.access_permission.edit_users_permission.code'));
         });
-
-
 
         // ---------------------- USER -------------------------------------
         //Usuarios que podem listar usuarios: Administrador e Gestor do Auxílio
         Gate::define('users.index', function () {
-            return $this->isAuthorized(2);
+            return $this->isAuthorized(config('santoantonio.access_permission.show_users.code'));
         });
 
         //Usuarios que podem editar usuarios: Administrador
         Gate::define('user.edit', function () {
-            return $this->isAuthorized(3);
+            return $this->isAuthorized(config('santoantonio.access_permission.edit_users.code'));
         });
 
 
         // ---------------------- REFEICAO -------------------------------------
         //Usuarios que podem listar refeições: Todos
         Gate::define('refeicaos.list', function () {
-            return $this->isAuthorized(4);
+            return $this->isAuthorized(config('santoantonio.access_permission.show_refeicao.code'));
         
         });
 
         //Usuarios que podem criar e editar refeicoes: Administrador
         Gate::define('refeicaos.create', function () {
-            return $this->isAuthorized(5);
+            return $this->isAuthorized(config('santoantonio.access_permission.edit_refeicao.code'));
         });
 
         //Usuarios que podem gerar relatórios de refeicoes: Todos
@@ -89,36 +73,36 @@ class AuthServiceProvider extends ServiceProvider
         // ---------------------- auxilio -------------------------------------
         //Usuarios que podem listar auxilios: Administrador, Gerenciador de Auxílio
         Gate::define('auxilios.list', function () {
-            return $this->isAuthorized(6);
+            return $this->isAuthorized(config('santoantonio.access_permission.show_auxilio.code'));
         });
 
         //Usuarios que podem conceder (criar) auxilio: Gerenciador de Auxilios
         Gate::define('auxilio.create', function () {
-            return $this->isAuthorized(7);
+            return $this->isAuthorized(config('santoantonio.access_permission.edit_auxilio.code'));
         });
 
         //Usuarios que podem gerar relatórios de auxilios: Administrador, Gestor
         Gate::define('auxilios.report', function () {
-            return $this->isAuthorized(8);
+            return $this->isAuthorized(config('santoantonio.access_permission.report_auxilio.code'));
         });
 
 
         // ---------------------- ticket -------------------------------------
         //Gerar tickets
         Gate::define('ticket.create', function () {
-            return $this->isAuthorized(9);
+            return $this->isAuthorized(config('santoantonio.access_permission.create_ticket.code'));
         });
 
         //Listar tickets:
         Gate::define('tickets.report', function () {
-            return $this->isAuthorized(10);
+            return $this->isAuthorized(config('santoantonio.access_permission.show_tickets.code'));
         });
 
 
         // ---------------------- dashboard -------------------------------------
         //Usuarios que visualizam a tabela de resumo de uso diário
         Gate::define('dashboard.table', function () {
-            return $this->isAuthorized(11);
+            return $this->isAuthorized(config('santoantonio.access_permission.access_permission.code'));
         });
 
 
@@ -127,7 +111,18 @@ class AuthServiceProvider extends ServiceProvider
         });
 
         Gate::define('tickets.lancamentopassado', function () {
-            return $this->isAuthorized(12);
+            return $this->isAuthorized(config('santoantonio.access_permission.create_past_tickets.code'));
+        });
+
+
+        //Ver turmas
+        Gate::define('turmas.list', function () {
+            return $this->isAuthorized(config('santoantonio.access_permission.show_turmas.code'));
+        });
+
+        //Ver usuários arquivados
+        Gate::define('users.editararquivados', function () {
+            return $this->isAuthorized(config('santoantonio.access_permission.editar_arquivados.code'));
         });
 
         
@@ -138,7 +133,7 @@ class AuthServiceProvider extends ServiceProvider
 
     private function isAuthorized($codigo){
         $user = Auth::user();
-        if($user->username == "2157933") return Response::allow();
+        if($user->username == env('MASTER_USER')) return Response::allow();
         $permissoes = $user->getCodigosPermissaoAcesso();
         if(in_array($codigo,$permissoes)) return Response::allow();
         return Response::deny('Você não tem permissão para executar essa ação.');

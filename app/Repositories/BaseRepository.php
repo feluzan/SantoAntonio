@@ -83,14 +83,59 @@ abstract class BaseRepository
      * @param int|null $limit
      * @return \Illuminate\Database\Eloquent\Builder
      */
-    public function allQuery($search = [], $skip = null, $limit = null)
+    public function allQuery($search = [], $skip = null, $limit = null, $baseQuery = null)
     {
-        $query = $this->model->newQuery();
+        if(!$baseQuery){
+            $query = $this->model->newQuery();
+        }else{
+            $query = $baseQuery;
+        }
+        
+        
+        if (count($search)) {
+            foreach($search as $key => $value) {
+                
+                if (in_array($key, $this->getFieldsSearchable())) {
+                    if(is_array($value)){
+                        $query->where($key, $value['operator'], $value['value'], $value['boolean']);
+                    }else{
+                        $query->where($key, $value);
+                    }
+                    
+                }
+            }
+        }
 
+        if (!is_null($skip)) {
+            $query->skip($skip);
+        }
+
+        if (!is_null($limit)) {
+            $query->limit($limit);
+        }
+        // dd($query);
+        return $query;
+    }
+
+    /**
+     * Build a query for retrieving all records.
+     *
+     * @param array $search
+     * @param int|null $skip
+     * @param int|null $limit
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function allLikeQuery($search = [], $skip = null, $limit = null, $baseQuery = null)
+    {
+        if(!$baseQuery){
+            $query = $this->model->newQuery();
+        }else{
+            $query = $baseQuery;
+        }
         if (count($search)) {
             foreach($search as $key => $value) {
                 if (in_array($key, $this->getFieldsSearchable())) {
-                    $query->where($key, $value);
+                    $query->where($key, 'LIKE', $value,"OR");
                 }
             }
         }
@@ -119,6 +164,13 @@ abstract class BaseRepository
     public function all($search = [], $skip = null, $limit = null, $columns = ['*'])
     {
         $query = $this->allQuery($search, $skip, $limit);
+
+        return $query->get($columns);
+    }
+
+    public function allLike($search = [], $skip = null, $limit = null, $columns = ['*'])
+    {
+        $query = $this->allLikeQuery($search, $skip, $limit);
 
         return $query->get($columns);
     }

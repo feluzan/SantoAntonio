@@ -41,7 +41,6 @@ Route::get('/home', 'HomeController@index')->name('home')->middleware('verified'
 
 Route::group(['middleware' => 'auth'], function () {
 
-
     /* ------------- ROTAS USER -----------------------------
     /* - Listar usuarios (index)
     /* - Editar usuario (edit/update)
@@ -51,6 +50,8 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('/user/{user}/edit', 'UserController@edit')->name('user.edit');
         Route::patch('/user/{user}', 'UserController@update')->name('user.update');
     });
+    Route::get('/users/archived', 'UserController@archivedIndex')->name('users.archiveIndex')->middleware('can:users.editararquivados');
+    Route::post('/users/archive/{user_id}', "UserController@updateArchive")->name('users.updateArchive')->middleware('can:users.editararquivados');
 
     /* ------------- ROTAS REFEICAO -----------------------------
     /* - Listar refeicoes (index)
@@ -100,6 +101,8 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/tickets/sumario', 'TicketController@sumaryIndex')->name('tickets.sumaryIndex')->middleware('can:tickets.report');
     Route::post('/tickets/sumario/report','TicketController@sumaryBuild')->name('tickets.sumaryBuild')->middleware('can:tickets.report');;
 
+    // Route::get('/relatorio/sumario', 'TicketController@')
+
     Route::get('/tickets/lancamentopassado', 'TicketController@lancamentoPassado')->name('tickets.lancamentopassado')->middleware('can:tickets.lancamentopassado');
     Route::post('/tickets/lancamentopassado', 'TicketController@pastStore')->name('tickets.pastStore')->middleware('can:tickets.lancamentopassado');
 
@@ -109,19 +112,17 @@ Route::group(['middleware' => 'auth'], function () {
     /* ------------- ROTAS PERMISSAO ACESSO -----------------------------
     /* 
     /* ---------------------------------------------------------*/
-    Route::group(['middleware'=>'can:permissaoAcesso.create'], function () {
-        // Route::get('/permissaoAcessos/{user}/create', 'PermissaoAcessoController@generate')->name('permissaoAcessos.generate');
-        
-        
-    });
     Route::get('/permissaoAcesso', 'PermissaoAcessoController@index')->name('permissaoAcessos.index');
     Route::post('/permissaoAcessos','PermissaoAcessoController@store')->name('permissaoAcessos.store')->middleware('can:permissaoAcesso.manage');
     Route::delete('/permissaoAcessos/{permissaoAcesso}', 'PermissaoAcessoController@destroy')->name('permissaoAcessos.destroy')->middleware('can:permissaoAcesso.manage');
+
+
+
+    Route::group(['middleware'=>'can:turmas.list'], function () {
+        Route::resource('turmas', 'TurmaController');
+        Route::get('/turma/{id_turma}/show_members', 'TurmaController@listUsers')->name('turmas.listarMembros');
+
+    });
 });
 
 
-
-
-
-
-// Route::resource('permissaoAcessos', 'PermissaoAcessoController');

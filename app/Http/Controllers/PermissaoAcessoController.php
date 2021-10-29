@@ -31,8 +31,7 @@ class PermissaoAcessoController extends AppBaseController
     {
         $permissaoAcessos = $this->permissaoAcessoRepository->all();
 
-        return view('permissao_acessos.index')
-            ->with('permissaoAcessos', $permissaoAcessos);
+        return view('permissao_acessos.index')->with('permissaoAcessos', $permissaoAcessos);
     }
 
     /**
@@ -59,7 +58,7 @@ class PermissaoAcessoController extends AppBaseController
         $permissaoAcesso = $this->permissaoAcessoRepository->create($input);
 
         Flash::success('Permissao Acesso saved successfully.');
-
+        activity("Permissão Acesso")->causedBy(Auth::user())->performedOn($permissaoAcesso)->log('Concedendo permissão de acesso.');
         return redirect(route('user.edit',[$input['user_id']]));
     }
 
@@ -146,9 +145,8 @@ class PermissaoAcessoController extends AppBaseController
             // Flash::error('Permissao Acesso not found');
             return redirect(route('user.edit',[$user_id]));
         }
-
+        activity("Permissão Acesso")->causedBy(Auth::user())->performedOn($permissaoAcesso)->log('Removendo permissão de acesso.');
         $this->permissaoAcessoRepository->delete($id);
-        // Flash::success('Permissao Acesso deleted successfully.');
         return redirect(route('user.edit',[$user_id]));
     }
 }

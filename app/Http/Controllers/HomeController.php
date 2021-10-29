@@ -11,6 +11,7 @@ use App\Models\Auxilio;
 use Carbon\Carbon;
 use Chartjs;
 use DB;
+use Illuminate\Support\Facades\Auth;
 
 class HomeController extends Controller
 {
@@ -76,14 +77,19 @@ class HomeController extends Controller
                         ->options([]);
 
             
-                        $weekLabels = [];
-            $weekValues = [];
+
+            $weekData = [];
+            for($i = 6; $i>=0; $i-=1){
+                $turnDate = Carbon::today()->subDays($i);
+                $weekData[$turnDate->format('d-m-Y')] = 0;
+            }
 
             foreach($ticketsWeek as $ticket){
-                $weekLabels[] = date('d-m-Y', strtotime($ticket->dateOnly));
-                $weekValues[] = $ticket->quantidade_total;
+                $weekData[date('d-m-Y', strtotime($ticket->dateOnly))] = $ticket->quantidade_total;
             }
-        
+            $weekLabels = array_keys($weekData);
+            $weekValues = array_values($weekData);
+
             $weekChart = app()->chartjs
                         ->name("weekChart_refeicao_" . $refeicao->id)
                         ->type('line')
@@ -116,7 +122,7 @@ class HomeController extends Controller
                 'weekChart' => $weekChart,
             ];
         }
-        
+        activity("View")->causedBy(Auth::user())->log('Exibindo home.');
         return view('home.home',compact('data', 'charts'));
     }
 }

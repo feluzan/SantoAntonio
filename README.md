@@ -28,7 +28,7 @@ Trecho da oração à Santo Antônio:
 ## Pré-requisitos
 
 - PHP
-    - Habilitar `extension: ldap` no arquivo php.ini)
+    - Habilitar `extension: ldap` no arquivo php.ini
 - MySQL
 - [Composer](https://getcomposer.org/download/)
 
@@ -46,13 +46,22 @@ Trecho da oração à Santo Antônio:
     - `DB_PASSWORD`
 
 - Rode os comandos a seguir
-    - `composer update`
-    - `composer global require "laravel/installer=~1.1"`
-    - `composer install`
-    - `php artisan key:generate`
-    - `php artisan migrate:install`
-    - `php artisan migrate`
-    - `php artisan vendor:publish`
+    ```
+    $ composer update
+
+    $ composer global require "laravel/installer"
+
+    $ composer install
+
+    $ php artisan key:generate
+
+    $ php artisan migrate:install
+
+    $ php artisan migrate
+
+    $ php artisan vendor:publish
+
+    ```
 
 - Acesse o arquivo `\config\ldap.php` e certifique-se de configurar corretamente os seguintes parâmetros do array `connections->default->settings`:
     - `account_prefix` : `''`
@@ -72,14 +81,74 @@ Trecho da oração à Santo Antônio:
     - `passwords->column` : `password`
 
 
+<br><br>
+## Alteração de permissão
 
-## Iniciando o sistema
+O sistema conta com uma gerência individual de permissão de funções, isto é, tudo que um usuário pode fazer dentro do sistema deve ser indicado de forma explícita dentro da configuração do usuário. Por isso, todas as permissões de funções são iniciadas com o status DESABILITADO para os usuários.
 
-Inicie o servidor do laravel com o comando `php artisan serve`
+Para que seja possível iniciar as habilitações das funções, é necessário indicar um usuário master. É indicado que esse usuário seja uma pessoa que tenha amplo conhecimento de TODAS as funções do sistema pois ele terá todos os acessos liberados.
+
+Para indicar o usuário master:
+- Acesse o arquivo `.env`
+- Edite a linha `MASTER_USER = "2157933"` para que contenha a matrícula SIAPE do usuário master.
+
+Após atribuir as funções "Alterar permissões de acesso dos usuários", "Ver os usuários do sistema" e "Editar os usuários do sistema" para alguém, o parâmetro `MASTER_USER` pode ser permanentemente deletado.
+
+<br><br>
+## Etapas adicionais para web servers
+
+- Ceder propriedade dos arquivos do projeto para o usuário que roda o php
+
+    ```
+    ### Debian/Ubuntu
+    $ sudo chown -R www-data /path/to/laravel/files
+
+    ### CentOS/RedHat/Fedora
+    $ sudo chown -R apache /path/to/laravel/files
+    ```
+
+- Ceder permissão de escrita em diretórios:
+    ```
+    # Group Writable (Group, User Writable)
+    $ sudo chmod -R gu+w storage
+
+    # World-writable (Group, User, Other Writable)
+    $ sudo chmod -R guo+w storage
+
+    #####
+    # The bootstrap/cache directory may need writing to also
+    ##
+
+    # Group Writable (Group, User Writable)
+    $ sudo chmod -R gu+w bootstrap/cache
+
+    # World-writable (Group, User, Other Writable)
+    $ sudo chmod -R guo+w bootstrap/cache
+    ```
+
+- Ceder todas as permissões recursivamente na pasta `public/uploads`
+    ```
+    $ chmod 777 ./uploads/*
+    ```
+
+
+<br><br>
+## Iniciando o sistema localmente
+
+- Inicie o servidor do laravel 
+    ```
+    $ php artisan serve
+    ```    
 
 <br>
 <br>
 
+
+# Registro de Versões
+
+- v0.1
+    
+    Versão inicial para homologação das funções do sistema.
 
 
 

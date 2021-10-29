@@ -8,6 +8,8 @@ use App\Repositories\TicketRepository;
 use App\Http\Controllers\AppBaseController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Repositories\RefeicaoRepository;
+use App\Repositories\TurmaRepository;
 use Flash;
 use Response;
 use Carbon\Carbon;
@@ -25,9 +27,17 @@ class TicketController extends AppBaseController
     /** @var  TicketRepository */
     private $ticketRepository;
 
-    public function __construct(TicketRepository $ticketRepo)
+    /** @var  RefeicaoRepository */
+    private $refeicaoRepository;
+
+    /** @var  TurmaRepository */
+    private $turmaRepository;
+
+    public function __construct(TicketRepository $ticketRepo, RefeicaoRepository $refeicaoRepo, TurmaRepository $turmaRepo)
     {
         $this->ticketRepository = $ticketRepo;
+        $this->refeicaoRepository = $refeicaoRepo;
+        $this->turmaRepository = $turmaRepo;
     }
 
     /**
@@ -57,7 +67,11 @@ class TicketController extends AppBaseController
             Flash::error('Ticket Virtual não gerado. ' . $input['username'] . ' não existe no sistema. ');
             return redirect(route('ticket.generate',[$input['refeicao_id']]));
         }
+<<<<<<< HEAD
 
+=======
+        
+>>>>>>> alteracao_relatorios
         $refeicao = Refeicao::find($input['refeicao_id']);
         
         //verifica se o $assistido possui o auxilio para a $refeicao
@@ -198,104 +212,69 @@ class TicketController extends AppBaseController
         $startDate = $request->input('startDate') ? Carbon::create($request->input('startDate')) : Carbon::today()->subDays(30);
         $endDate = $request->input('endDate') ? Carbon::create($request->input('endDate')) : Carbon::today();
 
-        $dates = [];
-        $looper = $request->input('startDate') ? Carbon::create($request->input('startDate')) : Carbon::today()->subDays(30);
-        $fields =[];
-        $fields['nome'] = 'Assistido';
-        // dd($diff);
-        while($looper->diffInDays($endDate)>0){
-            $dates[$looper->format('d/m/y')] = 0;
-            $fields[$looper->format('d/m/y')] = $looper->format('d/m/y');
-            
-            $looper = $looper->addDay();
-        }
-        $dates[$endDate->format('d/m/y')] = 0;
-        $fields[$endDate->format('d/m/y')] = $endDate->format('d/m/y');
+        $refeicoes = $this->refeicaoRepository->all();
+        $turmas = $this->turmaRepository->all();
 
-
-        $items = [];
-
-        $users = User::has('ticket', '>', 0)->get();
-
-        foreach($users as $u){
-            $aux = $dates;
-            $aux['nome'] = $u->name;
-            $aux['assinatura'] = "________________________________";
-            $tickets = Ticket::where('assistido_id',$u->id)->whereBetween(DB::raw('date(data_refeicao)'), [$startDate, $endDate])->get();
-            foreach($tickets as $t){
-                $aux[$t->data_refeicao->format('d/m/y')]+= $t->valor;
-            }
-            $items[] = (object)$aux;
-        }
-
-        $fields['assinatura'] = 'Assinatura';
        
 
-        return view('tickets.sumaryIndex',compact('startDate','endDate', 'items','fields'));
+        return view('relatorios.sumarizacao',compact('startDate','endDate', 'refeicoes', 'turmas'));
 
     }
 
     public function sumaryBuild(Request $request){
-        $startDate = $request->input('startDate') ? Carbon::create($request->input('startDate')) : Carbon::today()->subDays(30);
-        $endDate = $request->input('endDate') ? Carbon::create($request->input('endDate')) : Carbon::today();
+        $startDate = $request->input('startDate');
+        $endDate = $request->input('endDate');
 
-        $dates = [];
-        $datesHas = [];
-        $looper = $request->input('startDate') ? Carbon::create($request->input('startDate')) : Carbon::today()->subDays(30);
-        $fields =[];
-        $fields['nome'] = 'Assistido';
-        // dd($diff);
-        while($looper->diffInDays($endDate)>0){
-            $dates[$looper->format('d/m/y')] = 0;
-            $datesHas[$looper->format('d/m/y')] = 0;
-            $fields[$looper->format('d/m/y')] = $looper->format('d/m');
-            $looper = $looper->addDay();
-        }
-        $dates[$endDate->format('d/m/y')] = 0;
-        $fields[$endDate->format('d/m/y')] = $endDate->format('d/m/y');
-        $datesHas[$endDate->format('d/m/y')] = 0;
+        $tickets = $this->ticketRepository->sumaryTicketsBetweenDates($startDate,$endDate);
 
-        $items = [];
+        $totais['total'] = ["quantidade" => 0,"valorTotal" => 0];
 
-        $users = User::has('ticket', '>', 0)->get();
-
-        foreach($users as $u){
-            $aux = $dates;
-            $aux['nome'] = $u->name;
-            $aux['assinatura'] = "____________________";
-            $aux['total'] = 0;
-            $tickets = Ticket::where('assistido_id',$u->id)->whereBetween(DB::raw('date(data_refeicao)'), [$startDate, $endDate])->get();
-            foreach($tickets as $t){
-                $aux[$t->data_refeicao->format('d/m/y')]+= $t->valor;
-                $datesHas[$t->data_refeicao->format('d/m/y')]+=1;
-                $aux['total'] += $t->valor;
-            }
-            $items[] = (object)$aux;
+        foreach($request->input("refeicaos") as $refeicaoId){
+            $refeicoes[] = $this->refeicaoRepository->find($refeicaoId)->nome;
+            $totais[$this->refeicaoRepository->find($refeicaoId)->nome] = ["quantidade" => 0,"valorTotal" => 0];
         }
 
-
-        $fields['total'] = 'Total';
-        $fields['assinatura'] = 'Assinatura';
-
-        //retirar colunas dos dias que não houveram tickets emitidos
-        foreach($datesHas as $key => $value){
-            if($value==0){
-                unset($fields[$key]);
-            }
-        }
         
+        foreach($tickets as $ticket){
+            if(!in_array($ticket->refeicao->nome,$refeicoes)) continue;
+            $reportData[$ticket->assistido->name][$ticket->refeicao->nome] = ["quantidade" => $ticket->quantidade,"valorTotal" => $ticket->valor];
+            $totais[$ticket->refeicao->nome]["quantidade"] += $ticket->quantidade;
+            $totais[$ticket->refeicao->nome]["valorTotal"] += $ticket->valor;
+            $totais['total']["quantidade"] += $ticket->quantidade;
+            $totais['total']["valorTotal"] += $ticket->valor;
+            if(isset($reportData[$ticket->assistido->name]["total"])){
+                $reportData[$ticket->assistido->name]["total"]["quantidade"] += $ticket->quantidade;
+                $reportData[$ticket->assistido->name]["total"]["valorTotal"] += $ticket->valor;
+            }else{
+                $reportData[$ticket->assistido->name]["total"]["quantidade"] = $ticket->quantidade;
+                $reportData[$ticket->assistido->name]["total"]["valorTotal"] = $ticket->valor;
+            }
+        }
+
+        // dd($reportData);
+
+        // $fields = ["Nome"];
+        foreach($request->input("refeicaos") as $refeicaoId){
+            $refeicoes[] = $this->refeicaoRepository->find($refeicaoId)->nome;
+        }
 
         $metaData = [
             'title' => 'Sumário de Valores por Assistido - Emitido por ' . Auth::user()->name . ' em ' . date('d/m/Y H:i:s'),
             'filter' => 'Data Início: ' . date('d/m/Y', strtotime($startDate)) . ' || ' . 'Data Fim: ' . date('d/m/Y', strtotime($endDate)),
         ];
+        // dd($reportData);
 
+        // 
+        $columnsWidth["nome"] = "20%";
+        // dd(80/count($refeicoes));
+        $columnsWidth["qtd"] = (80 / (count($refeicoes) + 1)) * 0.35  . "%";
+        $columnsWidth["valor"] = (80 / (count($refeicoes) + 1)) * 0.65  . "%";
 
         $extraStyle=[];
         $extraStyle['td'] = "font-size:10px;text-align:center;";
         $extraStyle['th']="white-space: nowrap;font-size:10px;";
-        // return view('layouts.tableLandscapePDF',compact('items','fields','metaData','extraStyle'));
-        $pdf = PDF::loadView('layouts.tableLandscapePDF',compact('items','fields','metaData','extraStyle'))->setPaper('a4', 'landscape');
+        // return view('layouts.sumaryTicketsPDF',compact('refeicoes','reportData','metaData','extraStyle', 'columnsWidth','totais'));
+        $pdf = PDF::loadView('layouts.sumaryTicketsPDF',compact('refeicoes','reportData','metaData','extraStyle', 'columnsWidth','totais'))->setPaper('a4', 'landscape');
         return $pdf->download('[SA]Sumário de Valores ' . date('dmyHis') . '.pdf');
 
     }

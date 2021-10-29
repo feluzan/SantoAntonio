@@ -17,7 +17,9 @@ class UserRepository extends BaseRepository
      * @var array
      */
     protected $fieldSearchable = [
-        
+        'arquivado',
+        'name',
+        'username',
     ];
 
     /**
@@ -36,5 +38,18 @@ class UserRepository extends BaseRepository
     public function model()
     {
         return User::class;
+    }
+
+
+    public function allArchived($searchTerms = [], $likeTerms = []){
+        $searchTerms["arquivado"] = true;
+        
+        return $this->all($searchTerms);
+    }
+
+    public function allNotArchived($searchTerms = []){
+        $searchTerms["arquivado"] = false;
+        
+        return $this->all($searchTerms);
     }
 }

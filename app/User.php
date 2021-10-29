@@ -12,21 +12,13 @@ class User extends Authenticatable
     use Notifiable;
     use DateFormatService;
 
-    public $levels = array(
-        0 => 'Sem Funções',
-        1 => 'Administrador',
-        2 => 'Gestor do Auxílio',
-        3 => 'Restaurante',
-        4 => 'Consultas de Relatórios',
-    );
-
     /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
     protected $fillable = [
-        'name', 'username', 'password', 'level'
+        'name', 'username', 'password', 'level','arquivado'
     ];
 
     /**
@@ -45,6 +37,7 @@ class User extends Authenticatable
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
+        'arquivado' => 'boolean',
     ];
 
         /**
@@ -78,6 +71,14 @@ class User extends Authenticatable
     public function permissaoAcesso()
     {
         return $this->hasMany('App\Models\PermissaoAcesso','user_id');
+    }
+
+    /**
+     * The user assistido associated with ticket
+     */
+    public function turma()
+    {
+        return $this->belongsTo('App\Models\Turma');
     }
 
     public function getFormattedCreatedAtAttribute()
@@ -117,7 +118,10 @@ class User extends Authenticatable
         foreach($this->permissaoAcesso as $permissao){
             $permissoes[] = $permissao->getCodigo();
         }
-
         return $permissoes;
+    }
+
+    public function isArchived(){
+        return $this->arquivado;
     }
 }

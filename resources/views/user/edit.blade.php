@@ -12,40 +12,44 @@
            <div class="box-body">
                <div class="row">
                     <div class="col-xs-3">
-                        <!-- Created At Field -->
                         {!! Form::label('name', 'Nome:') !!}
                         <p>{{ $user->getName() }}</p>
                     </div>
 
                     <div class="col-xs-3">
-                        <!-- Created At Field -->
                         {!! Form::label('username', 'Usuário/Matrícula:') !!}
                         <p>{{ $user->getUsername() }}</p>
                     </div>
-
+                </div>
+                
+                <br>
+                
+                {!! Form::model($user, ['route' => ['user.update', $user->id], 'method' => 'patch', 'files' => true,'enctype'=>'multipart/form-data']) !!}
+                <div class="row">
                     <div class="col-xs-3">
-                        <!-- Created At Field -->
                         {!! Form::label('avatar', 'Foto de Perfil:') !!}
                         <img style="display:block;max-width: 200px;" src="/uploads/avatars/{{ $user->getAvatar() }} "/>
                     </div>
 
                     <div class="col-xs-3">
-                    {!! Form::label('', 'Alterar Foto de Perfil:') !!}
-                    {!! Form::model($user, ['route' => ['user.update', $user->id], 'method' => 'patch', 'files' => true,'enctype'=>'multipart/form-data']) !!}
+                        {!! Form::label('', 'Alterar Foto de Perfil:') !!}
                         {!! Form::file('avatar') !!}
                         <br>
-                        {!! Form::submit('Alterar foto', ['class' => 'btn btn-primary']) !!}
+                    </div>
+
+                    <div class="col-xs-12" style="margin-top:30px">
+                        {!! Form::label('', 'Turma:') !!}
+                        {!! Form::select('turma_id', $turmas, $user->turma ? $user->turma : 0) !!}
+                    </div>
+
+                    <div class="col-xs-12" style="margin-top:30px">
+                        {!! Form::submit('Salvar Alterações', ['class' => 'btn btn-primary']) !!}
                         <a href="{{ route('users.index') }}" class="btn btn-default">Voltar</a>
-                    {{ Form::close() }}
                     </div>
 
                     
-                    
-
-
-
-
                </div>
+               {{ Form::close() }}
 
                <div class="row">
                     @include('user.fields')

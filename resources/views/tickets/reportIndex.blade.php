@@ -39,10 +39,10 @@
                 <div class="row">
                     <div class="col-xs-12">
                         <h5>Preenchimentos Rápidos</h5>
-                        {{ Form::button('Hoje', ['class' => 'btn vtn-default', 'onclick' => 'fastFilterToday()']) }}
-                        {{ Form::button('Ontem', ['class' => 'btn vtn-default', 'onclick' => 'fastFilterYesterday()']) }}
-                        {{ Form::button('7 dias', ['class' => 'btn vtn-default', 'onclick' => 'fastFilterDaysBack(7)']) }}
-                        {{ Form::button('30 dias', ['class' => 'btn vtn-default', 'onclick' => 'fastFilterDaysBack(30)']) }}
+                        {{ Form::button('Hoje', ['class' => 'btn btn-default', 'onclick' => 'fastFilterToday()']) }}
+                        {{ Form::button('Ontem', ['class' => 'btn btn-default', 'onclick' => 'fastFilterYesterday()']) }}
+                        {{ Form::button('7 dias', ['class' => 'btn btn-default', 'onclick' => 'fastFilterDaysBack(7)']) }}
+                        {{ Form::button('30 dias', ['class' => 'btn btn-default', 'onclick' => 'fastFilterDaysBack(30)']) }}
                     </div>
 
                 </div>

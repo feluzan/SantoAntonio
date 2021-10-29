@@ -209,54 +209,91 @@
                             <table>
                                 <thead>
                                     <tr>
-                                    @php
-                                        $contador = 1;
-                                    @endphp
-                                    @foreach($fields as $field_name => $field_label)
-                                        <th style="{{ isset($extraStyle['th']) ? $extraStyle['th'] : '' }}" class="cell100 column{{ $contador }}">
+                                        <th style="{{ isset($extraStyle['th']) ? $extraStyle['th'] : '' }} width:20%;" rowspan="2">
                                             <div style="{{ isset($extraStyle['th div']) ? $extraStyle['th div'] : '' }}">
                                                 <span style="{{ isset($extraStyle['th span']) ? $extraStyle['th span'] : '' }}">
-                                                    {{ $field_label }}
+                                                    Nome
                                                 </span>
                                             </div>
                                         </th>
-                                        @php
-                                        $contador += 1;
-                                        @endphp
-                                    @endforeach
-                                    @if(isset($acoes) && count($acoes))
-                                        <th>Ações</th>
-                                    @endif
+                                        @foreach($refeicoes as $refeicao)
+                                            <th style="{{ isset($extraStyle['th']) ? $extraStyle['th'] : '' }}" class="cell100" colspan="2">
+                                                <div style="{{ isset($extraStyle['th div']) ? $extraStyle['th div'] : '' }}">
+                                                    <span style="{{ isset($extraStyle['th span']) ? $extraStyle['th span'] : '' }}">
+                                                        {{ $refeicao }}
+                                                    </span>
+                                                </div>
+                                            </th>
+                                        @endforeach
+                                        <th style="{{ isset($extraStyle['th']) ? $extraStyle['th'] : '' }}" class="cell100" colspan="2">
+                                            <div style="{{ isset($extraStyle['th div']) ? $extraStyle['th div'] : '' }}">
+                                                <span style="{{ isset($extraStyle['th span']) ? $extraStyle['th span'] : '' }}">
+                                                    TOTAL
+                                                </span>
+                                            </div>
+                                        </th>
+
+
+                                    </tr>
+                                    <tr>
+                                        @foreach($refeicoes as $refeicao)
+                                            <th style="{{ isset($extraStyle['th']) ? $extraStyle['th'] : '' }};width:{{ $columnsWidth['qtd'] }}" class="cell100">
+                                                <div style="{{ isset($extraStyle['th div']) ? $extraStyle['th div'] : '' }}">
+                                                    <span style="{{ isset($extraStyle['th span']) ? $extraStyle['th span'] : '' }}">
+                                                        Qtd
+                                                    </span>
+                                                </div>
+                                            </th>
+                                            <th style="{{ isset($extraStyle['th']) ? $extraStyle['th'] : '' }};width:{{ $columnsWidth['valor'] }}" class="cell100">
+                                                <div style="{{ isset($extraStyle['th div']) ? $extraStyle['th div'] : '' }}">
+                                                    <span style="{{ isset($extraStyle['th span']) ? $extraStyle['th span'] : '' }}">
+                                                        R$
+                                                    </span>
+                                                </div>
+                                            </th>
+                                        @endforeach
+
+                                        <th style="{{ isset($extraStyle['th']) ? $extraStyle['th'] : '' }};width:{{ $columnsWidth['qtd'] }}" class="cell100">
+                                            <div style="{{ isset($extraStyle['th div']) ? $extraStyle['th div'] : '' }}">
+                                                <span style="{{ isset($extraStyle['th span']) ? $extraStyle['th span'] : '' }}">
+                                                    Qtd
+                                                </span>
+                                            </div>
+                                        </th>
+                                        <th style="{{ isset($extraStyle['th']) ? $extraStyle['th'] : '' }};width:{{ $columnsWidth['valor'] }}" class="cell100">
+                                            <div style="{{ isset($extraStyle['th div']) ? $extraStyle['th div'] : '' }}">
+                                                <span style="{{ isset($extraStyle['th span']) ? $extraStyle['th span'] : '' }}">
+                                                    R$
+                                                </span>
+                                            </div>
+                                        </th>
                                     </tr>
                                 </thead>
 
                                 <tbody>
-                                    @foreach($items as $item)
+                                    @foreach($reportData as $nome => $consumo)
                                         <tr class="row100 body {{ isset($item->rowExtraClass) ? $item->rowExtraClass : '' }}">
-                                            @php
-                                                $contador = 1;
-                                            @endphp
-                                            @foreach($fields as $field_name => $field_label)
-                                                <td style="{{ isset($extraStyle['td']) ? $extraStyle['td'] : '' }}" class="cell100 column{{ $contador }}">{!! $helper->get_dot_notation($item, $field_name)  !!}</td>
-                                                @php
-                                                $contador += 1;
-                                                @endphp
+                                            <td>{!! $nome !!}</td>
+                                            @foreach($refeicoes as $refeicao)
+                                                <td style="text-align:center;">{!! $consumo[$refeicao]["quantidade"] !!}</td>
+                                                <td style="text-align:center;">{!! $helper->formatCurrencyValue($consumo[$refeicao]["valorTotal"]) !!}</td>
                                             @endforeach
-                                            @if(isset($acoes) && count($acoes))
-                                                <td>
-                                                    @foreach ($acoes as $route => $options)
-                                                        <?php
-                                                            $params = [];
-                                                            foreach($options['params'] as $param) {
-                                                                $params[$param] =  $item->{$param};
-                                                            }
-                                                        ?>
-                                                        <a href="{{ route($route, $params) }}">{{ $options['link'] }}</a> <br>
-                                                    @endforeach
-                                                </td>
-                                            @endif
+                                            <td style="text-align:center;">{!! $consumo["total"]["quantidade"] !!}</td>
+                                            <td style="text-align:center;">{!! $helper->formatCurrencyValue($consumo["total"]["valorTotal"]) !!}</td>
                                         </tr>
                                     @endforeach
+
+                                    <tr style="background-color:rgba(0,0,0,0)!important"><td><br></td></tr>
+
+                                    <tr style="font-weight:bold;margin-top:10px;background-color:#CCCCCC;color:#000000!important;">
+                                        <td style="color:#000000;">TOTAL</td>
+                                        @foreach($refeicoes as $refeicao)
+                                            <td style="text-align:center;">{!! $totais[$refeicao]["quantidade"] !!}</td>
+                                            <td style="text-align:center;">{!! $helper->formatCurrencyValue($totais[$refeicao]["valorTotal"]) !!}</td>
+                                        @endforeach
+                                        <td style="color:#000000;text-align:center;">{!! $totais['total']["quantidade"] !!}</td>
+                                        <td style="color:#000000;text-align:center;">{!! $helper->formatCurrencyValue($totais['total']["valorTotal"]) !!}</td>
+                                    </tr>
 
                                 </tbody>
 

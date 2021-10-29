@@ -60,6 +60,15 @@ function fastFilterDaysBack(d){
     onChangeFilters();
 }
 
+function selectAllCheckboxes(someclass, boolean){
+    if(boolean){
+        $('.'+someclass).prop( "checked", true );
+    }else{
+        $('.'+someclass).prop( "checked", false );
+    }
+
+}
+
 // $dates[$endDate->format('d/m/y')] = 0;
 // $fields[$endDate->format('d/m/y')] = $endDate->format('d/m/y');
 // $datesHas[$endDate->format('d/m/y')] = 0;
