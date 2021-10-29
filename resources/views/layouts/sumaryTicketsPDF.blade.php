@@ -275,8 +275,14 @@
                                         <tr class="row100 body {{ isset($item->rowExtraClass) ? $item->rowExtraClass : '' }}">
                                             <td>{!! $nome !!}</td>
                                             @foreach($refeicoes as $refeicao)
+                                                @if(array_key_exists($refeicao,$consumo))
                                                 <td style="text-align:center;">{!! $consumo[$refeicao]["quantidade"] !!}</td>
                                                 <td style="text-align:center;">{!! $helper->formatCurrencyValue($consumo[$refeicao]["valorTotal"]) !!}</td>
+                                                @else
+                                                <td style="text-align:center;">0</td>
+                                                <td style="text-align:center;">{!! $helper->formatCurrencyValue(0) !!}</td>
+                                                @endif
+                                                
                                             @endforeach
                                             <td style="text-align:center;">{!! $consumo["total"]["quantidade"] !!}</td>
                                             <td style="text-align:center;">{!! $helper->formatCurrencyValue($consumo["total"]["valorTotal"]) !!}</td>

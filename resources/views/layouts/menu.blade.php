@@ -5,19 +5,19 @@
 
 <li class="header">Funções Básicas</li>
 @can('users.index')
-    <li class="{{ Request::is('user') ? 'active' : '' }}">
+    <li class="{{ Route::is('users.index') ? 'active' : '' }}">
         <a href="{{ route('users.index') }}"><i class="fa fa-user"></i><span>Listar Usuários</span></a>
     </li>
 @endcan
 
 @can('refeicaos.list')
-<li class="{{ Request::is('refeicaos*') ? 'active' : '' }}">
+<li class="{{ Route::is('refeicaos.index') ? 'active' : '' }}">
     <a href="{{ route('refeicaos.index') }}"><i class="fa fa-apple"></i><span>Listar Refeições</span></a>
 </li>
 @endcan
 
 @can('auxilios.list')
-<li class="{{ Request::is('auxilios*') ? 'active' : '' }}">
+<li class="{{ Route::is('auxilios.index') ? 'active' : '' }}">
     <a href="{{ route('auxilios.index') }}"><i class="fa fa-hand-holding-usd"></i><span>Listar Auxílios</span></a>
 </li>
 @endcan

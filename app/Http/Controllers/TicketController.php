@@ -249,11 +249,6 @@ class TicketController extends AppBaseController
 
         // dd($reportData);
 
-        // $fields = ["Nome"];
-        foreach($request->input("refeicaos") as $refeicaoId){
-            $refeicoes[] = $this->refeicaoRepository->find($refeicaoId)->nome;
-        }
-
         $metaData = [
             'title' => 'Sumário de Valores por Assistido - Emitido por ' . Auth::user()->name . ' em ' . date('d/m/Y H:i:s'),
             'filter' => 'Data Início: ' . date('d/m/Y', strtotime($startDate)) . ' || ' . 'Data Fim: ' . date('d/m/Y', strtotime($endDate)),
