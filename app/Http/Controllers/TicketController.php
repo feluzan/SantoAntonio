@@ -67,11 +67,7 @@ class TicketController extends AppBaseController
             Flash::error('Ticket Virtual não gerado. ' . $input['username'] . ' não existe no sistema. ');
             return redirect(route('ticket.generate',[$input['refeicao_id']]));
         }
-<<<<<<< HEAD
-
-=======
         
->>>>>>> alteracao_relatorios
         $refeicao = Refeicao::find($input['refeicao_id']);
         
         //verifica se o $assistido possui o auxilio para a $refeicao
