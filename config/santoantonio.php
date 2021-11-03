@@ -45,7 +45,9 @@ return [
         'v0.3' => [
             "Inclusão de change log.",
             "Criação do arquivo de configuração santoantonio.php",
-            "Criação de TURMA"
+            "Criação de TURMA",
+            "Novo relatório de sumarização de tickets",
+            "Funcionalidade de Arquivamento de Usuário",
         ],
     ],
 
