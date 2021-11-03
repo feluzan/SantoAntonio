@@ -147,9 +147,15 @@ Após atribuir as funções "Alterar permissões de acesso dos usuários", "Ver 
 
 # Registro de Versões
 
-- v0.1
-    
-    Versão inicial para homologação das funções do sistema.
-
-
+- v0.1   
+    - Versão inicial para homologação das funções do sistema.
+- v0.2
+    - Aprimoramento do controle de permissão,
+    - Adicionada a funcionalidade de lançar tickets em dias anteriores
+- v0.3
+    - Inclusão de change log,
+    - Criação do arquivo de configuração santoantonio.php
+    - Criação de TURMA
+    - Novo relatório de sumarização de tickets
+    - Funcionalidade de Arquivamento de Usuário
 
