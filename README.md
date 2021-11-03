@@ -6,6 +6,7 @@ Atualmente está sendo testado e homologado no Ifes Campus Montanha.
 
 Dúvidas, críticas, sugestões ou perguntas devem ser enviadas para `felix.zanetti@ifes.edu.br`.
 
+Alternativamente você pode abrir uma [Issue](https://github.com/feluzan/SantoAntonio/issues) ou, caso queira contribuir, faça um [Pull Request](https://github.com/feluzan/SantoAntonio/pulls).
 <br><br>
 
 # O Santo Antônio
