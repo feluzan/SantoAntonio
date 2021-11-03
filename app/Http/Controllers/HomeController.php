@@ -79,16 +79,21 @@ class HomeController extends Controller
             
 
             $weekData = [];
+            $weekLabels = [];
             for($i = 6; $i>=0; $i-=1){
                 $turnDate = Carbon::today()->subDays($i);
                 $weekData[$turnDate->format('d-m-Y')] = 0;
+                $weekLabels[] = $turnDate->format('d-m-Y');
             }
 
             foreach($ticketsWeek as $ticket){
                 $weekData[date('d-m-Y', strtotime($ticket->dateOnly))] = $ticket->quantidade_total;
             }
-            $weekLabels = array_keys($weekData);
-            $weekValues = array_values($weekData);
+
+            $weekValues = [];
+            foreach($weekLabels as $label){
+                $weekValues[] = $weekData[$label];
+            }
 
             $weekChart = app()->chartjs
                         ->name("weekChart_refeicao_" . $refeicao->id)
