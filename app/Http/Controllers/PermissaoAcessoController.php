@@ -10,6 +10,8 @@ use Illuminate\Http\Request;
 use Flash;
 use Response;
 
+use Illuminate\Support\Facades\Auth;
+
 class PermissaoAcessoController extends AppBaseController
 {
     /** @var  PermissaoAcessoRepository */
