@@ -281,6 +281,7 @@ class TicketController extends AppBaseController
         $input = $request->all();
 
         $date = Carbon::create($input['dateInput']);
+        $inputDate = Carbon::create($input['dateInput'])->format('d/m/Y');
         $today = Carbon::today();
         $listaMatriculas = $input['listaMatriculas'];
 
@@ -300,6 +301,7 @@ class TicketController extends AppBaseController
             $assistido = User::where('username',$matricula)->first();
 
             if($assistido == null){
+                // Flash::error('Ticket Virtual não gerado. ' . $matricula . ' não existe no sistema. ');
                 $log[] = array(false,'Ticket Virtual não gerado. ' . $matricula . ' não existe no sistema. ');
                 continue;
             }
@@ -307,6 +309,7 @@ class TicketController extends AppBaseController
             //verifica se o $assistido possui o auxilio para a $refeicao
             $auxilio = Auxilio::where('user_id',$assistido->id)->where('refeicao_id',$refeicao->id)->first();
             if($auxilio==null){
+                // Flash::error('Ticket Virtual não gerado. ' . $assistido->name . '(' . $assistido->username . ')' . ' não tem auxílio para essa refeição. ');
                 $log[] = array(false,'Ticket Virtual não gerado. ' . $assistido->name . '(' . $assistido->username . ')' . ' não tem auxílio para essa refeição. ');
                 continue;
             }
@@ -314,6 +317,7 @@ class TicketController extends AppBaseController
             //verifica se o $assistido já emitiu um ticket para a $refeicao na $date
             $todayTicket = Ticket::where('assistido_id',$assistido->id)->where('refeicao_id',$refeicao->id)->whereDate('data_refeicao', $date)->first();
             if($todayTicket!=null){
+                // Flash::error('Ticket Virtual não gerado. ' . $assistido->name . '(' . $assistido->username . ')' . ' já realizou havia realizado essa refeição para o dia ' . $date->format('d/m/Y') . '.');
                 $log[] = array(false,'Ticket Virtual não gerado. ' . $assistido->name . '(' . $assistido->username . ')' . ' já realizou havia realizado essa refeição para o dia ' . $date->format('d/m/Y') . '.');
                 continue;
             }
@@ -326,11 +330,12 @@ class TicketController extends AppBaseController
 
             // dd($input);
             $ticket = $this->ticketRepository->create($input);
+            // Flash::success('Ticket Virtual para  ' . $assistido->name . '(' . $assistido->username . ')' . ' gerado com sucesso.');
             $log[] = array(true,'Ticket Virtual para  ' . $assistido->name . '(' . $assistido->username . ')' . ' gerado com sucesso.');
         }
 
         // return view('tickets.lancamentoPassadoResult',compact('log','refeicao','date'));
-        return redirect(route('tickets.lancamentoPassadoResult',['log'=>$log, 'refeicao'=>$refeicao, 'date'=>$date]) );
+        return redirect(route('tickets.lancamentoPassadoResult',['log'=> $log, 'refeicao'=>$refeicao, 'date'=>$inputDate]) );
         // return redirect()->action('TicketController@lancamentoPassadoResult',['log'=>$log, 'refeicao'=>$refeicao, 'date'=>$date]);
         // return redirect(route('tickets.lancamentoPassadoResult',[$log=>$log, $refeicao=>$refeicao, $date=>$date]));
         // return redirect()->route('tickets.lancamentoPassadoResult', ['log'=>$log, 'refeicao'=>$refeicao, 'date'=>$date]);
@@ -338,11 +343,10 @@ class TicketController extends AppBaseController
     }
 
     public function lancamentoPassadoResult(Request $request){
-        // dd($request->input('log'));
-        $log = $request->input('log');
+        // $log = $request->input('log');
         $refeicao = Refeicao::find($request->input('refeicao'));
-        $date = $date = Carbon::create($request->input('date')['date'])->format('d/m/Y');
-        // dd($refeicao);
+        $date = $request->input('date');
+        $log = $request->input('log');
         return view('tickets.lancamentoPassadoResult',compact('log','refeicao','date'));
     }
 
