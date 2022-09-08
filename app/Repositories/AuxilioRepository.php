@@ -53,7 +53,7 @@ class AuxilioRepository extends BaseRepository
 		return true;
 	}
 
-	public getByRefeicao($refeicao){
+	public function getByRefeicao($refeicao){
 		$query = $this->model->newQuery();
 		$query->where('refeicao_id',$refeicao->id);
 		return $query->get();

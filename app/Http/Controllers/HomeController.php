@@ -13,6 +13,8 @@ use Chartjs;
 use DB;
 use Illuminate\Support\Facades\Auth;
 use App\Repositories\RefeicaoRepository;
+use App\Repositories\TicketRepository;
+use App\Repositories\AuxilioRepository;
 
 class HomeController extends Controller{
 
@@ -61,13 +63,7 @@ class HomeController extends Controller{
 			$auxilios = $this->auxilioRepository->getByRefeicao($refeicao);
 			$data[$refeicao->nome] = [$ticketsToday,$auxilios, $refeicao];
 
-			$ticketsWeek = DB::table('tickets')
-							->selectRaw('count(id) as quantidade_total, date(data_refeicao) dateOnly, sum(valor) valor_total')
-							->groupBy('dateOnly')
-							->whereBetween(DB::raw('date(data_refeicao)'), [$startDate, $endDate])
-							->where('refeicao_id',$refeicao->id)
-							->orderBy('dateOnly','ASC')
-							->get();
+			$ticketsWeek = $this->ticketRepository->getTicketsWeekByRefeicao($refeicao);
 
 			$dayChart =  app()->chartjs
 						->name("dayChart_refeicao_" . $refeicao->id)

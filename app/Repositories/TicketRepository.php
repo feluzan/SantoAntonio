@@ -74,12 +74,28 @@ class TicketRepository extends BaseRepository
 	}
 
 	public function getByRefeicaoHoje($refeicao){
-
 		$query = $this->model->newQuery();
 		$query->where('refeicao_id',$refeicao->id)
 			->whereDate('data_refeicao', Carbon::today());
 
 		return $query->get();
+
+	}
+
+	public function getTicketsWeekByRefeicao($refeicao){
+		$startDate = Carbon::today()->subDays(7);
+		$endDate = Carbon::today();
+
+		$query = $this->model->newQuery();
+		$query->selectRaw('count(id) as quantidade_total, date(data_refeicao) dateOnly, sum(valor) valor_total')
+			->groupBy('dateOnly')
+			->whereBetween(DB::raw('date(data_refeicao)'), [$startDate, $endDate])
+			->where('refeicao_id',$refeicao->id)
+			->orderBy('dateOnly','ASC');
+
+		return $query->get();
+
+
 
 	}
 
