@@ -13,32 +13,39 @@ use App\Repositories\BaseRepository;
 
 class RefeicaoRepository extends BaseRepository
 {
-    /**
-     * @var array
-     */
-    protected $fieldSearchable = [
-        'nome',
-        'inicio',
-        'fim',
-        'valor',
-        'habilitada'
-    ];
+	/**
+	 * @var array
+	 */
+	protected $fieldSearchable = [
+		'nome',
+		'inicio',
+		'fim',
+		'valor',
+		'habilitada'
+	];
 
-    /**
-     * Return searchable fields
-     *
-     * @return array
-     */
-    public function getFieldsSearchable()
-    {
-        return $this->fieldSearchable;
-    }
+	/**
+	 * Return searchable fields
+	 *
+	 * @return array
+	 */
+	public function getFieldsSearchable()
+	{
+		return $this->fieldSearchable;
+	}
 
-    /**
-     * Configure the Model
-     **/
-    public function model()
-    {
-        return Refeicao::class;
-    }
+	/**
+	 * Configure the Model
+	 **/
+	public function model()
+	{
+		return Refeicao::class;
+	}
+
+
+	public function getAllHabilitadas(){
+		$query = $this->model->newQuery();
+		$query->where('habilitada',1);
+		return $query->get();
+	}
 }

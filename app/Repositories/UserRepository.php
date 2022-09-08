@@ -13,43 +13,50 @@ use App\Repositories\BaseRepository;
 
 class UserRepository extends BaseRepository
 {
-    /**
-     * @var array
-     */
-    protected $fieldSearchable = [
-        'arquivado',
-        'name',
-        'username',
-    ];
+	/**
+	 * @var array
+	 */
+	protected $fieldSearchable = [
+		'arquivado',
+		'name',
+		'username',
+	];
 
-    /**
-     * Return searchable fields
-     *
-     * @return array
-     */
-    public function getFieldsSearchable()
-    {
-        return $this->fieldSearchable;
-    }
+	/**
+	 * Return searchable fields
+	 *
+	 * @return array
+	 */
+	public function getFieldsSearchable()
+	{
+		return $this->fieldSearchable;
+	}
 
-    /**
-     * Configure the Model
-     **/
-    public function model()
-    {
-        return User::class;
-    }
+	/**
+	 * Configure the Model
+	 **/
+	public function model()
+	{
+		return User::class;
+	}
 
 
-    public function allArchived($searchTerms = [], $likeTerms = []){
-        $searchTerms["arquivado"] = true;
-        
-        return $this->all($searchTerms);
-    }
+	public function allArchived($searchTerms = [], $likeTerms = []){
+		$searchTerms["arquivado"] = true;
+		
+		return $this->all($searchTerms);
+	}
 
-    public function allNotArchived($searchTerms = []){
-        $searchTerms["arquivado"] = false;
-        
-        return $this->all($searchTerms);
-    }
+	public function allNotArchived($searchTerms = []){
+		$searchTerms["arquivado"] = false;
+		
+		return $this->all($searchTerms);
+	}
+
+	public function findByUsername($username){
+		$query = $this->model->newQuery();
+		$query->where('username',$username);
+
+		return $query->get()->first();
+	}
 }
