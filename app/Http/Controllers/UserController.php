@@ -42,7 +42,7 @@ class UserController extends AppBaseController
                 'username' => ['operator'=> 'like', 'value' => '%' . $searchTerm . '%', 'boolean' => 'or'],
             ]);
         }else{
-            $user = $this->userRepository->allNotArchived();
+            $user = $this->userRepository->allOrderedByName();
         }
 
         return view('user.index')->with('user', $user);

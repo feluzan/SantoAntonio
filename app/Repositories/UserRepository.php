@@ -56,7 +56,13 @@ class UserRepository extends BaseRepository
 	public function findByUsername($username){
 		$query = $this->model->newQuery();
 		$query->where('username',$username);
-
 		return $query->get()->first();
+	}
+
+	public function allOrderedByName($arquivado = false){
+		$query = $this->model->newQuery();
+		$query->where('arquivado',$arquivado);
+		$query->orderBy('name','ASC');
+		return $query->get();
 	}
 }
