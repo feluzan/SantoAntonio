@@ -132,11 +132,11 @@ class AuthServiceProvider extends ServiceProvider
     }
 
     private function isAuthorized($codigo){
+        /** @var User $user */
         $user = Auth::user();
         if($user->username == env('MASTER_USER')) return Response::allow();
         $permissoes = $user->getCodigosPermissaoAcesso();
         if(in_array($codigo,$permissoes)) return Response::allow();
         return Response::deny('Você não tem permissão para executar essa ação.');
-
     }
 }

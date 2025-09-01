@@ -75,7 +75,7 @@
                                          class="img-circle" alt="User Image"/>
                                     <p>
                                         {{ Auth::user()->name }}
-                                        <small>Primeiro Login em {{ Auth::user()->created_at->format('M. Y') }}</small>
+                                        
                                     </p>
                                 </li>
                                 <!-- Menu Footer-->

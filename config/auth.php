@@ -66,15 +66,20 @@ return [
     */
 
     'providers' => [
-        'users' => [
-            'driver' => 'ldap', //'eloquent',
-            'model' => App\User::class,
-        ],
+        // 'users' => [
+        //     'driver' => 'ldap', //'eloquent',
+        //     'model' => App\User::class,
+        // ],
 
         // 'users' => [
         //     'driver' => 'database',
         //     'table' => 'users',
         // ],
+
+        'users' => [
+        'driver' => 'eloquent',
+        'model' => App\User::class, // ou App\Models\User::class se for esse o namespace
+    ],
     ],
 
     /*

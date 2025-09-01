@@ -61,7 +61,6 @@ class TurmaController extends AppBaseController
         $turma = $this->turmaRepository->create($input);
 
         Flash::success('Turma criada com sucesso.');
-        activity("Turma")->causedBy(Auth::user())->performedOn($turma)->log("Nova turma criada.");
 
         return redirect(route('turmas.index'));
     }

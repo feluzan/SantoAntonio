@@ -133,7 +133,6 @@ class UserController extends AppBaseController
         }
         $user['arquivado'] = $archive;
         $user->save();
-        activity("User")->causedBy(Auth::user())->performedOn($user)->log("Arquivando usuário e removendo todos os auxílios.");
         return redirect()->back();
     }
 }

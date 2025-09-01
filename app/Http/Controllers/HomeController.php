@@ -127,7 +127,6 @@ class HomeController extends Controller
                 'weekChart' => $weekChart,
             ];
         }
-        activity("View")->causedBy(Auth::user())->log('Exibindo home.');
         return view('home.home',compact('data', 'charts'));
     }
 }

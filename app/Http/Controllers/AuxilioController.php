@@ -46,8 +46,6 @@ class AuxilioController extends AppBaseController
         }else{
             $users = User::all();
         }
-
-        activity("View")->causedBy(Auth::user())->log('Exibindo lista de auxílios.');
         return view('auxilios.index')
             ->with('users', $users);
     }
@@ -66,8 +64,6 @@ class AuxilioController extends AppBaseController
         $auxilio = $this->auxilioRepository->create($input);
 
         Flash::success('Auxilio salvo com sucesso.');
-        activity("Auxilio")->causedBy(Auth::user())->performedOn($auxilio)->log("Novo auxílio criado.");
-
         return redirect(route('auxilios.manage',[$input['user_id']]));
     }
 
@@ -95,8 +91,6 @@ class AuxilioController extends AppBaseController
         $this->auxilioRepository->delete($id);
 
         Flash::success('Auxilio deletado com sucesso.');
-        activity("Auxilio")->causedBy(Auth::user())->performedOn($auxilio)->log("Auxilio excluído.");
-
         return redirect(route('auxilios.manage', [$user_id]));
     }
 
@@ -106,7 +100,6 @@ class AuxilioController extends AppBaseController
         $refeicoes = Refeicao::all();
         // dd($user->auxilio);
         // dd($user, $refeicoes);
-        activity("View")->causedBy(Auth::user())->performedOn($user)->log('Exibindo auxílios do usuário.');
         return view('auxilios.individual', compact('user', 'refeicoes'));
     }
 

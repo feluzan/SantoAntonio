@@ -1,0 +1,23 @@
+{
+    "name": "PHP + MySQL",
+    "dockerComposeFile": "docker-compose.yml",
+    "service": "php",
+    "workspaceFolder": "/workspace",
+    "forwardPorts": [8080, 80, 3306],
+    "postCreateCommand": "composer install || true",
+    "customizations": {
+      "vscode": {
+        "extensions": [
+          "bmewburn.vscode-intelephense-client",
+          "xdebug.php-debug",
+          "ms-azuretools.vscode-docker",
+          "oderwat.indent-rainbow",
+          "dbaeumer.vscode-eslint",
+          "github.copilot"
+        ],
+        "settings": {
+          "php.validate.executablePath": "/usr/local/bin/php"
+        }
+      }
+    }
+  }

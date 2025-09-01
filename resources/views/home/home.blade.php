@@ -11,7 +11,7 @@
 
 <div class="content">
     <div class="clearfix"></div>
-    @if(Auth::user()->isArchived())
+    @if(Auth::user() && Auth::user() instanceof \App\User && Auth::user()->isArchived())
         <div class="box box-primary">
             <div class="box-body">
                 <div class="row">

@@ -22,7 +22,7 @@
     {!! Form::number('valor', $refeicao->valor ?? '', ['class' => 'form-control',
                                         'min' => '0.00',
                                         'max'=> '10000.00',
-                                        'step' => '0.05', ]) !!}
+                                        'step' => '0.01', ]) !!}
 </div>
 
 <!-- Habilitada Field -->

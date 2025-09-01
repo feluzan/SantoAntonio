@@ -8,9 +8,9 @@ use App\Repositories\RefeicaoRepository;
 use App\Http\Controllers\AppBaseController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Flash;
+use Laracasts\Flash\Flash;
 use Response;
-use PDF;
+use Barryvdh\DomPDF\Facade as PDF;
 
 use App\Models\Auxilio;
 use App\Models\Refeicao;
@@ -35,7 +35,6 @@ class RefeicaoController extends AppBaseController
     public function index(Request $request)
     {
         $refeicaos = $this->refeicaoRepository->all();
-        activity("View")->causedBy(Auth::user())->log('Exibindo lista de refeições.');
         return view('refeicaos.index')->with('refeicaos', $refeicaos);
     }
 
@@ -69,7 +68,6 @@ class RefeicaoController extends AppBaseController
         // dd($input);
 
         $refeicao = $this->refeicaoRepository->create($input);
-        activity("Refeição")->causedBy(Auth::user())->performedOn($refeicao)->log('Criando refeição.');
         Flash::success('Refeicao criada com sucesso.');
 
         return redirect(route('refeicaos.index'));
@@ -90,7 +88,6 @@ class RefeicaoController extends AppBaseController
             Flash::error('Refeição não encontrada.');
             return redirect(route('refeicaos.index'));
         }
-        activity("View")->causedBy(Auth::user())->log('Exibindo refeição.');
         return view('refeicaos.show')->with('refeicao', $refeicao);
     }
 
@@ -139,7 +136,6 @@ class RefeicaoController extends AppBaseController
         $refeicao = $this->refeicaoRepository->update($request->all(), $id);
 
         Flash::success('Refeição atualizada com sucesso.');
-        activity("Refeição")->causedBy(Auth::user())->performedOn($refeicao)->log('Editando refeição.');
 
         return redirect(route('refeicaos.index'));
     }
